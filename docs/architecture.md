@@ -15,6 +15,25 @@ https://coggle.it/diagram/Vv7ygtaFfxlmVQIE
  * Get the VAT/Gemini code?
 
 ### Format
-* Input: fastq / bcl / bed...
+All formats are available for upload and download
+* Input: FastQ / bcl / bed...
+* Intermediate: BAM / CRAM / VCF / gVCF
+* Ouput: xls / ods / png + pdf report
 
 ## Client
+No logic, user interface only
+###Native
+* Technology: Qt
+* Dashboard
+* Job queued monitoring
+* Internationalization (French and English)
+
+###Web
+* DNS
+* Wiki
+ * Technology: Gollum
+* community.regovar.org
+ * Forum
+ * Plugins (download and upload) 
+
+## EasterEggs
