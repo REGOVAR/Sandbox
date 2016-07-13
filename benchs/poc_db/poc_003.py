@@ -140,6 +140,10 @@ Base.metadata.create_all(connection)
 
 def normalize_chr(chrm):
 	chrm = str(r.CHROM).upper()
+	if (chrm.startswith("CHROM")):
+		chrm = chrm[5:]
+	if (chrm.startswith("CHRM")):
+		chrm = chrm[4:]
 	if (chrm.startswith("CHR")):
 		chrm = chrm[3:]
 	return chrm
@@ -186,7 +190,7 @@ for file in os.listdir("."):
 				if i.gt_bases is None:
 					continue
 				alt = i.gt_bases.split('/')
-				chrm = normalize_chr(str(r.CHRM))
+				chrm = normalize_chr(str(r.CHROM))
 
 				sql_query1 += "('%s', %s, '%s', '%s')," % (chrm, str(r.POS), str(r.REF), str(alt[0]))
 				sql_query2 += "(%s, '%s', %s, '%s', '%s')," % (str(samples[i.sample].id), chrm, str(r.POS), str(r.REF), str(alt[0]))
@@ -214,4 +218,19 @@ print("TEST SOME REQUEST")
 
 
 
+# count sample
+#count sample_variant
+#count variant
+#count variant / sample
+#Analyse trio
+# #test1 : 
 
+# - Créer une table variant de 3 milliard de lignes . 
+# - Faire une requete de  selection aléatoire de x variants 
+# - Faire une requete de  selection de la selection précédente 
+# - Faire une requete de  selection de la selection précédente
+# - En faite.. faire un benchmark paramétré avec des arguments 
+
+# #test2 : 
+# - On refait la même chose avec en utilisant cette fois la table "selection_has_variant" . 
+# Et on compare ! 
