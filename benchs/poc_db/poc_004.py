@@ -244,13 +244,6 @@ with Timer() as t:
 	result = connection.execute("SELECT COUNT(*) FROM _4_sample")
 print("Sample total (via ORM -> raw query): " , result.first()[0], " (", t, ")")
 
-try:
-	conn = psycopg2.connect(dbname='regovar-dev', user='regovar', host='localhost', password='regovar', port='5433')
-	res = conn.execute("""SELECT COUNT(*) FROM _4_sample""")
-	print("Sample total (via psycopg2 -> raw query): " , res, " (", t, ")")
-except:
-	print ("I am unable to connect to the database")
-
 
 
 
@@ -295,12 +288,19 @@ for r in result:
 	t = r[3]
 	c += 1
 
-# Test join right 2 tables on big request
+
 with Timer() as t:
-	usedColumn = func.count(Variant.pos)
-	result = connection.execute("SELECT  FROM _4_variant")
-	#session.query(Variant.sample_id, Variant.is_transition, func.count(Variant.pos)).join(Variant.pos == Variant.pos).group_by(Variant.sample_id, Variant.is_transition).order_by(Variant.sample_id.desc()).all()
-print("\nCount how many variant are common by sample : " , len(result), " results (", t, ")")
+	result = connection.execute("SELECT sample_id, is_transition, count(*) FROM _4_variant GROUP BY is_transition, sample_id ORDER BY sample_id, is_transition")
+print("\nCheck Sequencing integrity : " , len(result), " results (", t, ")")
+print("    sample : transition / transversion")
+s = 0
+tv = 0
+for r in result:
+	if r[0] > s :
+		print("\tSample n°", s, " : ", r[2], "/", tv, " ", round(tv / r[2],2))
+		c = 0
+	s = r[0]
+	tv = r[2]
 
 
 
