@@ -7,18 +7,20 @@ import sqlalchemy
 import subprocess
 import reprlib
 import time
+import psycopg2
 
 from progress.bar import Bar
 
-from sqlalchemy import Table, Column, Integer, String, Boolean, ForeignKey, Sequence, UniqueConstraint, Index, func
+from sqlalchemy import Table, Column, Integer, String, Boolean, ForeignKey, Sequence, UniqueConstraint, Index, func, distinct
 from sqlalchemy.orm import relationship, Session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql.expression import ClauseElement
 from sqlalchemy.ext.declarative import declarative_base
 
-import vcf
+from pysam import VariantFile
 
-print("Benchmark SQLAlchemy - Model schema n°2")
+
+print("Benchmark SQLAlchemy - Model schema n°4")
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -89,42 +91,27 @@ def get_or_create(session, model, defaults=None, **kwargs):
 # Init SQLAlchemy database engine thanks to a connection string
 Base = declarative_base()
 
-class SampleVariant(Base):
-	__tablename__ = '_3_sample_variant'
-	sample_id = Column(Integer, ForeignKey('_3_sample.id'),   primary_key=True, nullable=False)
-	chr       = Column(String,   primary_key=True, nullable=False)
-	pos       = Column(Integer,  primary_key=True, nullable=False)
-	ref       = Column(String,   primary_key=True, nullable=False)
-	alt       = Column(String,   primary_key=True, nullable=False)
-	# genotype = Column(JSONB, nullable=True)
-	# infos = Column(Array(String, dimensions=2))
-	__table_args__ = (Index('_3_sample_variant_idx', 'sample_id', 'chr', 'pos', 'ref', 'alt', unique=True), UniqueConstraint('sample_id', 'chr', 'pos', 'ref', 'alt', name='_3_sample_variant_uc'), )
-	#variants = relationship("Variant", back_populates="samples")
-	#samples  = relationship("Sample", back_populates="variants")
 
 class Sample(Base):
-	__tablename__ = '_3_sample'
-	id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
+	__tablename__ = '_4_sample'
+	id = Column(Integer, Sequence('_4_sample_1_seq'), primary_key=True, nullable=False)
 	name = Column(String)
-	description = Column(String)
-	#variants = relationship("SampleVariant", back_populates="samples")
 	def __str__(self):
 		return "<Sample(name='%s')>" % (self.name)
 
 
 class Variant(Base):
-	__tablename__ = '_3_variant'
+	__tablename__ = '_4_variant'
 	bin = Column(Integer)
 	chr = Column(String,  primary_key=True, nullable=False)
 	pos = Column(Integer, primary_key=True, nullable=False)
 	ref = Column(String,  primary_key=True, nullable=False)
 	alt = Column(String,  primary_key=True, nullable=False)
+	sample_id = Column (Integer, ForeignKey('_4_sample.id'), primary_key=True)
 	is_transition = Column(Boolean)
-	#samples = relationship("SampleVariant", back_populates="variants")
-	__table_args__ = (Index('_3_variant_idx', 'chr', 'pos', 'ref', 'alt', unique=True), UniqueConstraint('chr', 'pos', 'ref', 'alt', name='_3_variant_uc'), )
-
+	__table_args__ = (Index('_4_variant_idx', 'chr', 'pos', 'ref', 'alt', 'sample_id', unique=True), UniqueConstraint('chr', 'pos', 'ref', 'alt', 'sample_id', name='_4_variant_uc'), )
 	def __str__(self):
-		return "<Variant(id='%s', chr='%s', pos='%s', ref='%s', alt='%s')>" % (self.id, self.chr, self.pos, self.ref, self.alt)
+		return "<Variant(chr='%s', pos='%s', ref='%s', alt='%s', sample='%s'>" % (self.chr, self.pos, self.ref, self.alt, self.sample_id)
 
 
 
@@ -156,9 +143,8 @@ Base.metadata.create_all(connection)
 # IMPORT VCF Data
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-
 def normalize_chr(chrm):
-	chrm = str(r.CHROM).upper()
+	chrm = chrm.upper()
 	if (chrm.startswith("CHROM")):
 		chrm = chrm[5:]
 	if (chrm.startswith("CHRM")):
@@ -174,8 +160,16 @@ def get_alt(alt):
 	else:
 		return alt.split('/')
 
+
+def is_transition(ref, alt):
+	tr = ref+alt
+	if tr in ('AG', 'GA', 'CT', 'TC'):
+		return True
+	return False
+
 # retrieve all vcf in the current directory
 #directory = os.path.dirname(os.path.realpath(__file__))
+
 
 
 print("IMPORT VCF FILES")
@@ -183,15 +177,15 @@ start_0 = datetime.datetime.now()
 
 session = Session(connection)
 
+
 for file in os.listdir("."):
 	if file.endswith(".vcf") or file.endswith(".vcf.gz"):
-
 		start = datetime.datetime.now()
 
-		vcf_reader = vcf.Reader(filename=file)
+		vcf_reader = VariantFile(file)
 
 		# get samples in the VCF 
-		samples = {i : get_or_create(session, Sample, name=i)[0] for i in vcf_reader.samples}
+		samples = {i : get_or_create(session, Sample, name=i)[0] for i in list((vcf_reader.header.samples))}
 		session.commit()
 
 		# console verbose
@@ -208,34 +202,29 @@ for file in os.listdir("."):
 		# parsing vcf file
 		print("Importing file ", file, "\n\r\trecords  : ", records_count, "\n\r\tsamples  :  (", len(samples.keys()), ") ", reprlib.repr([s for s in samples.keys()]), "\n\r\tstart    : ", start)
 		bar = Bar('\tparsing  : ', max=records_count, suffix='%(percent).1f%% - %(elapsed_td)s')
-		sql_query1 = "INSERT INTO _3_variant (chr, pos, ref, alt, is_transition) VALUES "
-		sql_query2 = "INSERT INTO _3_sample_variant (sample_id, chr, pos, ref, alt) VALUES "
-		for r in vcf_reader: 
+		sql_query1 = "INSERT INTO _4_variant (sample_id, chr, pos, ref, alt, is_transition) VALUES "
+		for r in vcf_reader.fetch(): 
 			bar.next()
-			for i in r.samples:
-				if i.gt_bases is None:
-					continue
-				alt = get_alt(i.gt_bases)
-				chrm = normalize_chr(str(r.CHROM))
+			chrm = normalize_chr(str(r.chrom))
+			
+			for sn in r.samples:
+				s = r.samples.get(sn)
 
-				if alt[0] != str(r.REF) :
-					sql_query1 += "('%s', %s, '%s', '%s', %s)," % (chrm, str(r.POS), str(r.REF), str(alt[0]), r.is_transition)
-					sql_query2 += "(%s, '%s', %s, '%s', '%s')," % (str(samples[i.sample].id), chrm, str(r.POS), str(r.REF), str(alt[0]))
-				if alt[1] != str(r.REF) :
-					sql_query1 += "('%s', %s, '%s', '%s', %s)," % (chrm, str(r.POS), str(r.REF), str(alt[1]), r.is_transition)
-					sql_query2 += "(%s, '%s', %s, '%s', '%s')," % (str(samples[i.sample].id), chrm, str(r.POS), str(r.REF), str(alt[1]))
+				alt = s.alleles
+
+				if alt[0] != str(r.ref) :
+					sql_query1 += "(%s, '%s', %s, '%s', '%s', %s)," % (str(samples[sn].id), chrm, str(r.pos), str(r.ref), str(alt[0]), is_transition(r.ref, str(alt[0])))
+				if alt[1] != str(r.ref) :
+					sql_query1 += "(%s, '%s', %s, '%s', '%s', %s)," % (str(samples[sn].id), chrm, str(r.pos), str(r.ref), str(alt[1]), is_transition(r.ref, str(alt[1])))
 
 		bar.finish()
 		end = datetime.datetime.now()
 		print("\tparsing done   : " , end, " => " , (end - start).seconds, "s")
 		sql_query1 = sql_query1[:-1] + " ON CONFLICT DO NOTHING"
-		sql_query2 = sql_query2[:-1] + " ON CONFLICT DO NOTHING"
 		connection.execute(sql_query1)
-		connection.execute(sql_query2)
 		end = datetime.datetime.now()
 		print("\tdb import done : " , end, " => " , (end - start).seconds, "s")
 		print("")
-
 
 
 end = datetime.datetime.now()
@@ -249,37 +238,52 @@ print("TEST SOME REQUESTS")
 # count sample
 with Timer() as t:
 	result = session.query(Sample).count()
-print("\nSample total : " , result, " (", t, ")")
+print("\nSample total (via ORM -> POO) : " , result, " (", t, ")")
 
-#count sample_variant
 with Timer() as t:
-	result = session.query(SampleVariant).count()
-print("SampleVariant total : " , result, " (", t, ")")
+	result = connection.execute("SELECT COUNT(*) FROM _4_sample")
+print("Sample total (via ORM -> raw query): " , result.first()[0], " (", t, ")")
+
+try:
+	conn = psycopg2.connect(dbname='regovar-dev', user='regovar', host='localhost', password='regovar', port='5433')
+	res = conn.execute("""SELECT COUNT(*) FROM _4_sample""")
+	print("Sample total (via psycopg2 -> raw query): " , res, " (", t, ")")
+except:
+	print ("I am unable to connect to the database")
+
+
+
+
 
 #count variant
 with Timer() as t:
 	result = session.query(Variant).count()
-print("Variant total : " , result, " (", t, ")")
+print("\nVariant total : " , result, " (", t, ")")
+
+with Timer() as t:
+	result = connection.execute("SELECT COUNT(DISTINCT(chr, pos, ref, alt)) FROM _4_variant")
+print("Distinct Variant total : " , result.first()[0], " (", t, ")")
+result.close()
 
 
 #count variant / sample
 with Timer() as t:
-	result = session.query(SampleVariant.sample_id, func.count(SampleVariant.sample_id)).group_by(SampleVariant.sample_id).all()
+	result = session.query(Variant.sample_id, func.count(Variant.sample_id)).group_by(Variant.sample_id).all()
 print("\nCount variant by sample (", t, ")")
 for r in result:
 	print ("\tSample n°", r[0], " : ", r[1], " variants")
 
 # Get all variant with REF=A on chr5 for the sample 1
 with Timer() as t:
-	result = session.query(SampleVariant.pos, SampleVariant.alt).filter(SampleVariant.sample_id == 1).filter(SampleVariant.chr == '5').filter(SampleVariant.ref == 'A').all()
+	result = session.query(Variant.pos, Variant.alt).filter(Variant.sample_id == 1).filter(Variant.chr == '5').filter(Variant.ref == 'A').all()
 print("\nList variant of sample n°1, on chr5, with ref A : " , len(result), " results (", t, ")")
 print ("\t", reprlib.repr((result)))
 
 
 # Test group by same table : 
 with Timer() as t:
-	usedColumn = func.count(SampleVariant.pos)
-	result = session.query(SampleVariant.pos, SampleVariant.ref, SampleVariant.alt, usedColumn).group_by(SampleVariant.pos, SampleVariant.ref, SampleVariant.alt).order_by(usedColumn.desc()).all()
+	usedColumn = func.count(Variant.pos)
+	result = session.query(Variant.pos, Variant.ref, Variant.alt, usedColumn).group_by(Variant.pos, Variant.ref, Variant.alt).order_by(usedColumn.desc()).all()
 print("\nCount how many variant are common by sample : " , len(result), " results (", t, ")")
 t = 0
 c = 0
@@ -293,6 +297,12 @@ for r in result:
 
 # Test join right 2 tables on big request
 with Timer() as t:
-	usedColumn = func.count(SampleVariant.pos)
-	result = session.query(SampleVariant.sample_id, Variant.is_transition, func.count(SampleVariant.pos)).join(SampleVariant.pos == Variant.pos).group_by(SampleVariant.sample_id, Variant.is_transition).order_by(SampleVariant.sample_id.desc()).all()
+	usedColumn = func.count(Variant.pos)
+	result = connection.execute("SELECT  FROM _4_variant")
+	#session.query(Variant.sample_id, Variant.is_transition, func.count(Variant.pos)).join(Variant.pos == Variant.pos).group_by(Variant.sample_id, Variant.is_transition).order_by(Variant.sample_id.desc()).all()
 print("\nCount how many variant are common by sample : " , len(result), " results (", t, ")")
+
+
+
+
+
