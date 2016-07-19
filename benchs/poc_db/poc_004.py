@@ -10,6 +10,8 @@ import time
 import psycopg2
 
 from progress.bar import Bar
+from progress.spinner import Spinner
+from multiprocessing import Pool
 
 from sqlalchemy import Table, Column, Integer, String, Boolean, ForeignKey, Sequence, UniqueConstraint, Index, func, distinct
 from sqlalchemy.orm import relationship, Session
@@ -173,6 +175,9 @@ def is_transition(ref, alt):
 
 
 print("IMPORT VCF FILES")
+# Start a worker processes.
+
+
 start_0 = datetime.datetime.now()
 
 session = Session(connection)
@@ -196,15 +201,19 @@ for file in os.listdir("."):
 		# process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 		process = subprocess.Popen(bashCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 		cmd_out = process.communicate()[0]
-		records_count = int(cmd_out.decode('utf8'))
+		records_count = int(cmd_out.decode('utf8'))		
 		# records_count = 5000
 
 		# parsing vcf file
 		print("Importing file ", file, "\n\r\trecords  : ", records_count, "\n\r\tsamples  :  (", len(samples.keys()), ") ", reprlib.repr([s for s in samples.keys()]), "\n\r\tstart    : ", start)
 		bar = Bar('\tparsing  : ', max=records_count, suffix='%(percent).1f%% - %(elapsed_td)s')
-		sql_query1 = "INSERT INTO _4_variant (sample_id, chr, pos, ref, alt, is_transition) VALUES "
+		sql_query = ""
+		sql_head = "INSERT INTO _4_variant (sample_id, chr, pos, ref, alt, is_transition) VALUES "
+		sql_tail = " ON CONFLICT DO NOTHING"
+		count = 0
 		for r in vcf_reader.fetch(): 
 			bar.next()
+
 			chrm = normalize_chr(str(r.chrom))
 			
 			for sn in r.samples:
@@ -213,15 +222,26 @@ for file in os.listdir("."):
 				alt = s.alleles
 
 				if alt[0] != str(r.ref) :
-					sql_query1 += "(%s, '%s', %s, '%s', '%s', %s)," % (str(samples[sn].id), chrm, str(r.pos), str(r.ref), str(alt[0]), is_transition(r.ref, str(alt[0])))
+					sql_query += "(%s, '%s', %s, '%s', '%s', %s)," % (str(samples[sn].id), chrm, str(r.pos), str(r.ref), str(alt[0]), is_transition(r.ref, str(alt[0])))
+					count += 1
 				if alt[1] != str(r.ref) :
-					sql_query1 += "(%s, '%s', %s, '%s', '%s', %s)," % (str(samples[sn].id), chrm, str(r.pos), str(r.ref), str(alt[1]), is_transition(r.ref, str(alt[1])))
+					sql_query += "(%s, '%s', %s, '%s', '%s', %s)," % (str(samples[sn].id), chrm, str(r.pos), str(r.ref), str(alt[1]), is_transition(r.ref, str(alt[1])))
+					count += 1
+
+				# manage split big request to avoid sql out of memory transaction
+				if count >= 1000000:
+					count = 0
+					transaction = sql_head + sql_query[:-1] + sql_tail
+					connection.execute(transaction)
+					sql_query = ""
+
+
 
 		bar.finish()
 		end = datetime.datetime.now()
 		print("\tparsing done   : " , end, " => " , (end - start).seconds, "s")
-		sql_query1 = sql_query1[:-1] + " ON CONFLICT DO NOTHING"
-		connection.execute(sql_query1)
+		transaction = sql_head + sql_query[:-1] + sql_tail
+		connection.execute(transaction)
 		end = datetime.datetime.now()
 		print("\tdb import done : " , end, " => " , (end - start).seconds, "s")
 		print("")
@@ -291,7 +311,7 @@ for r in result:
 
 with Timer() as t:
 	result = connection.execute("SELECT sample_id, is_transition, count(*) FROM _4_variant GROUP BY is_transition, sample_id ORDER BY sample_id, is_transition")
-print("\nCheck Sequencing integrity : " , len(result), " results (", t, ")")
+print("\nCheck Sequencing integrity (", t, ")")
 print("    sample : transition / transversion")
 s = 0
 tv = 0
