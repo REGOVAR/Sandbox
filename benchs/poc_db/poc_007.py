@@ -37,20 +37,20 @@ print("Benchmark n°7\n - PySam\n - Model : Sample & Variant & SampleVariant (id
 Base = declarative_base()
 
 class SampleVariant(Base):
-	__tablename__ = '_3_sample_variant'
-	sample_id = Column(Integer, ForeignKey('_3_sample.id'),   primary_key=True, nullable=False)
+	__tablename__ = '_7_sample_variant'
+	sample_id = Column(Integer, ForeignKey('_7_sample.id'),   primary_key=True, nullable=False)
 	chr       = Column(String,   primary_key=True, nullable=False)
 	pos       = Column(Integer,  primary_key=True, nullable=False)
 	ref       = Column(String,   primary_key=True, nullable=False)
 	alt       = Column(String,   primary_key=True, nullable=False)
 	# genotype = Column(JSONB, nullable=True)
 	# infos = Column(Array(String, dimensions=2))
-	__table_args__ = (Index('_3_sample_variant_idx', 'sample_id', 'chr', 'pos', 'ref', 'alt', unique=True), UniqueConstraint('sample_id', 'chr', 'pos', 'ref', 'alt', name='_3_sample_variant_uc'), )
+	__table_args__ = (Index('_7_sample_variant_idx', 'sample_id', 'chr', 'pos', 'ref', 'alt', unique=True), UniqueConstraint('sample_id', 'chr', 'pos', 'ref', 'alt', name='_7_sample_variant_uc'), )
 	#variants = relationship("Variant", back_populates="samples")
 	#samples  = relationship("Sample", back_populates="variants")
 
 class Sample(Base):
-	__tablename__ = '_3_sample'
+	__tablename__ = '_7_sample'
 	id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
 	name = Column(String)
 	description = Column(String)
@@ -60,7 +60,7 @@ class Sample(Base):
 
 
 class Variant(Base):
-	__tablename__ = '_3_variant'
+	__tablename__ = '_7_variant'
 	bin = Column(Integer)
 	chr = Column(String,  primary_key=True, nullable=False)
 	pos = Column(Integer, primary_key=True, nullable=False)
@@ -68,7 +68,7 @@ class Variant(Base):
 	alt = Column(String,  primary_key=True, nullable=False)
 	is_transition = Column(Boolean)
 	#samples = relationship("SampleVariant", back_populates="variants")
-	__table_args__ = (Index('_3_variant_idx', 'chr', 'pos', 'ref', 'alt', unique=True), UniqueConstraint('chr', 'pos', 'ref', 'alt', name='_3_variant_uc'), )
+	__table_args__ = (Index('_7_variant_idx', 'chr', 'pos', 'ref', 'alt', unique=True), UniqueConstraint('chr', 'pos', 'ref', 'alt', name='_7_variant_uc'), )
 
 	def __str__(self):
 		return "<Variant(id='%s', chr='%s', pos='%s', ref='%s', alt='%s')>" % (self.id, self.chr, self.pos, self.ref, self.alt)
@@ -112,7 +112,7 @@ for file in os.listdir("."):
 		vcf_reader = VariantFile(file)
 
 		# get samples in the VCF 
-		samples = {i : get_or_create(session, Sample, name=i)[0] for i in vcf_reader.samples}
+		samples = {i : get_or_create(session, Sample, name=i)[0] for i in list((vcf_reader.header.samples))}
 		session.commit()
 
 		# console verbose
@@ -128,7 +128,7 @@ for file in os.listdir("."):
 
 		# parsing vcf file
 		print("Importing file ", file, "\n\r\trecords  : ", records_count, "\n\r\tsamples  :  (", len(samples.keys()), ") ", reprlib.repr([s for s in samples.keys()]), "\n\r\tstart    : ", start)
-		bar = Bar('\tparsing  : ', max=records_count, suffix='%(percent).1f%% - %(elapsed_td)s')
+		bar = Bar('\tparsing  : ', max=records_count, suffix='%(percent).1f%% - %(elapsed_td)s' + " (" + str(job_in_progress) + " sql job in progress) " )
 		sql_head1 = "INSERT INTO _7_variant (chr, pos, ref, alt, is_transition) VALUES "
 		sql_head2 = "INSERT INTO _7_sample_variant (sample_id, chr, pos, ref, alt) VALUES "
 		sql_tail = " ON CONFLICT DO NOTHING"
@@ -145,14 +145,14 @@ for file in os.listdir("."):
 				pos, ref, alt = normalize(r.pos, r.ref, s.alleles[0])
 
 				if alt != ref :
-					sql_query1 += "(%s, '%s', %s, '%s', '%s', %s)," % (chrm, str(pos), ref, alt, is_transition(ref, alt))
-					sql_query2 += "(%s, '%s', %s, '%s', '%s', %s)," % (str(samples[sn].id), chrm, str(pos), ref, alt)
+					sql_query1 += "('%s', %s, '%s', '%s', %s)," % (chrm, str(pos), ref, alt, is_transition(ref, alt))
+					sql_query2 += "(%s, '%s', %s, '%s', '%s')," % (str(samples[sn].id), chrm, str(pos), ref, alt)
 					count += 1
 
 				pos, ref, alt = normalize(r.pos, r.ref, s.alleles[1])
 				if alt != ref :
-					sql_query1 += "(%s, '%s', %s, '%s', '%s', %s)," % (chrm, str(pos), ref, alt, is_transition(ref, alt))
-					sql_query2 += "(%s, '%s', %s, '%s', '%s', %s)," % (str(samples[sn].id), chrm, str(pos), ref, alt)
+					sql_query1 += "('%s', %s, '%s', '%s', %s)," % (chrm, str(pos), ref, alt, is_transition(ref, alt))
+					sql_query2 += "(%s, '%s', %s, '%s', '%s')," % (str(samples[sn].id), chrm, str(pos), ref, alt)
 					count += 1
 
 				# manage split big request to avoid sql out of memory transaction
@@ -160,7 +160,8 @@ for file in os.listdir("."):
 					count = 0
 					transaction1 = sql_head1 + sql_query1[:-1] + sql_tail
 					transaction2 = sql_head2 + sql_query2[:-1] + sql_tail
-					threading.Thread(target=exec_sql_query, args=(transaction1, transaction2)).start()
+					threading.Thread(target=exec_sql_query, args=(transaction1, )).start()
+					threading.Thread(target=exec_sql_query, args=(transaction2, )).start()
 					sql_query1 = ""
 					sql_query2 = ""
 
