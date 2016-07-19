@@ -280,26 +280,26 @@ with Timer() as t:
 
 	result = connection.execute("""SELECT chr, pos, ref, alt, count(sample_id ) as "used" FROM _2_variant GROUP BY chr, pos, ref, alt ORDER BY "used" DESC""")
 
-print("\nCount how many variant are common by sample : " , len(result), " results (", t, ")")
+print("\nCount how many variant are common by sample : " , result.rowcount, " results (", t, ")")
 t = 0
 c = 0
 print("    sample : variant count")
 for r in result:
-	if t > r[3]:
+	if t > int(r[4]):
 		print("\t", t, " : ", c)
 		c = 0
-	t = r[3]
+	t = int(r[4])
 	c += 1
 
 with Timer() as t:
 	result = connection.execute("SELECT sample_id, is_transition, count(*) FROM _2_variant GROUP BY is_transition, sample_id ORDER BY sample_id, is_transition")
-print("\nCheck Sequencing integrity : " , len(result), " results (", t, ")")
+print("\nCheck Sequencing integrity : " , result.rowcount, " results (", t, ")")
 print("    sample : transition / transversion")
 s = 0
 tv = 0
 for r in result:
-	if r[0] > s :
+	if int(r[0]) > s :
 		print("\tSample n°", s, " : ", r[2], "/", tv, " ", round(tv / r[2],2))
 		c = 0
-	s = r[0]
-	tv = r[2]
+	s = int(r[0])
+	tv = int(r[2])
