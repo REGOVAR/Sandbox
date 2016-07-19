@@ -20,12 +20,11 @@ from sqlalchemy.sql.expression import ClauseElement
 from sqlalchemy.ext.declarative import declarative_base
 
 from pysam import VariantFile
-
 from poc_tools import *
 
 
 
-print("Benchmark n°4\n - PySam\n - Model : Sample & Variant\n - SQLAlchemy using raw sql query\n - Parsing on main thread - SQL query exec on multithread")
+print("Benchmark n°6\n - PySam\n - Model : Sample & Variant\n - SQLAlchemy using raw sql query\n - Parsing on main thread - SQL query exec on multithread")
 
 
 
