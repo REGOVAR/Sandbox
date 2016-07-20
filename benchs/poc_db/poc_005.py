@@ -57,7 +57,7 @@ def import_vcf(conn, filename):
 		except Exception as e : 
 			last_id = None
 
-		# Si bien inseré , alors on sauvegarde l'identifiant 
+		# Si bien inseré , alors on sauvegarde l'identifiant . Les tupples sonr hachable! On en profite 
 		if last_id is not None:
 			variant_ids[(chrom,pos,ref,alt)] = last_id
 
