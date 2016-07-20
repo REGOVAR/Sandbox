@@ -1,21 +1,38 @@
-CXX = g++ 
+.PHONY: all clean
 
-LDFLAGS = -Lvcflib/lib \
-	  -Lvcflib/tabixpp/htslib \
-	  -lvcflib -lhts -lz -lpthread -lm
+CXX = g++
 
-INCLUDE = -I vcflib/include -I vcflib/tabixpp/htslib
+LDFLAGS = \
+	-Lvcflib/lib \
+	-Lvcflib/tabixpp/htslib \
+	-lvcflib -lhts -lz -lpthread -lm
+
+INCLUDE = \
+	-I vcflib/include \
+	-I vcflib/tabixpp/htslib
 
 CCFLAGS = -Wall -Wextra -pedantic -std=c++11
 
-all: import_regovar
+VCFLIB = vcflib/lib/libvcflib.a
 
-vcflib/lib/libvcflib.a : 
+BIN=import_regovar
+
+SRC = \
+	main.cpp
+
+OBJ = $(SRC:.cpp=.o)
+
+all: $(BIN)
+
+$(VCFLIB):
 	make -C vcflib openmp
 
-import_regovar: main.cpp vcflib/lib/libvcflib.a 
-	$(CXX) -Wall -o $@ $<  $(LDFLAGS) $(INCLUDE)
+%.o: %.cpp $(VCFLIB)
+	$(CXX) $(CCFLAGS) -c -o $@ $<  $(INCLUDE)
+
+$(BIN): $(OBJ)
+	$(CXX) -o $@ $^ $(LDFLAGS)
 
 clean:
-	rm -f import_regovar
+	rm -f $(BIN) *.o
 	make -C vcflib clean
