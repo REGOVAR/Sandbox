@@ -38,17 +38,16 @@ Base = declarative_base()
 
 class SampleVariant(Base):
 	__tablename__ = '_8_sample_variant'
-	sample_id = Column(Integer, ForeignKey('_3_sample.id'),   primary_key=True, nullable=False)
-	id        = Column(Integer,   primary_key=True, nullable=False)
+	sample_id  = Column(Integer, ForeignKey('_8_sample.id'),   primary_key=True, nullable=False)
+	variant_id = Column(Integer, ForeignKey('_8_variant.id'),  primary_key=True, nullable=False)
 	# genotype = Column(JSONB, nullable=True)
 	# infos = Column(Array(String, dimensions=2))
-	__table_args__ = (Index('_8_sample_variant_idx', 'sample_id', 'id', unique=True), UniqueConstraint('sample_id', 'id', name='_8_sample_variant_uc'), )
+	__table_args__ = (Index('_8_sample_variant_idx', 'sample_id', 'variant_id', unique=True), UniqueConstraint('sample_id', 'variant_id', name='_8_sample_variant_uc'), )
 
 class Sample(Base):
 	__tablename__ = '_8_sample'
 	id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
 	name = Column(String)
-	description = Column(String)
 	#variants = relationship("SampleVariant", back_populates="samples")
 	def __str__(self):
 		return "<Sample(name='%s')>" % (self.name)
@@ -56,7 +55,7 @@ class Sample(Base):
 
 class Variant(Base):
 	__tablename__ = '_8_variant'
-	id  = Column(Integer, primary_key=True, nullable=False)
+	id  = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
 	bin = Column(Integer)
 	chr = Column(String,  nullable=False)
 	pos = Column(Integer, nullable=False)
@@ -108,7 +107,7 @@ for file in os.listdir("."):
 		vcf_reader = VariantFile(file)
 
 		# get samples in the VCF 
-		samples = {i : get_or_create(session, Sample, name=i)[0] for i in vcf_reader.samples}
+		samples = {i : get_or_create(session, Sample, name=i)[0] for i in list((vcf_reader.header.samples))}
 		session.commit()
 
 		# console verbose
@@ -125,9 +124,9 @@ for file in os.listdir("."):
 		# parsing vcf file
 		print("Importing file ", file, "\n\r\trecords  : ", records_count, "\n\r\tsamples  :  (", len(samples.keys()), ") ", reprlib.repr([s for s in samples.keys()]), "\n\r\tstart    : ", start)
 		bar = Bar('\tparsing  : ', max=records_count, suffix='%(percent).1f%% - %(elapsed_td)s')
-		sql_head1 = "INSERT INTO _7_variant (chr, pos, ref, alt, is_transition) VALUES "
-		sql_head2 = "INSERT INTO _7_sample_variant (sample_id, chr, pos, ref, alt) VALUES "
-		sql_tail = " ON CONFLICT DO NOTHING"
+		sql_head1 = "INSERT INTO _8_variant (chr, pos, ref, alt, is_transition) VALUES "
+		sql_pattern2 = "INSERT INTO _8_sample_variant (sample_id, variant_id) SELECT %s, id FROM _8_variant WHERE chr='%s' AND pos=%s AND ref='%s' AND alt='%s' ON CONFLICT DO NOTHING;"
+		sql_tail = " ON CONFLICT DO NOTHING;"
 		sql_query1 = ""
 		sql_query2 = ""
 		count = 0
@@ -141,22 +140,22 @@ for file in os.listdir("."):
 				pos, ref, alt = normalize(r.pos, r.ref, s.alleles[0])
 
 				if alt != ref :
-					sql_query1 += "(%s, '%s', %s, '%s', '%s', %s)," % (chrm, str(pos), ref, alt, is_transition(ref, alt))
-					sql_query2 += "(%s, '%s', %s, '%s', '%s', %s)," % (str(samples[sn].id), chrm, str(pos), ref, alt)
+					sql_query1 += "('%s', %s, '%s', '%s', %s)," % (chrm, str(pos), ref, alt, is_transition(ref, alt))
+					sql_query2 += sql_pattern2 % (str(samples[sn].id), chrm, str(pos), ref, alt)
 					count += 1
 
 				pos, ref, alt = normalize(r.pos, r.ref, s.alleles[1])
 				if alt != ref :
-					sql_query1 += "(%s, '%s', %s, '%s', '%s', %s)," % (chrm, str(pos), ref, alt, is_transition(ref, alt))
-					sql_query2 += "(%s, '%s', %s, '%s', '%s', %s)," % (str(samples[sn].id), chrm, str(pos), ref, alt)
+					sql_query1 += "('%s', %s, '%s', '%s', %s)," % (chrm, str(pos), ref, alt, is_transition(ref, alt))
+					sql_query2 += sql_pattern2 % (str(samples[sn].id), chrm, str(pos), ref, alt)
 					count += 1
 
 				# manage split big request to avoid sql out of memory transaction
-				if count >= 1000000:
+				if count >= 50000:
 					count = 0
 					transaction1 = sql_head1 + sql_query1[:-1] + sql_tail
-					transaction2 = sql_head2 + sql_query2[:-1] + sql_tail
-					threading.Thread(target=exec_sql_query, args=(transaction1, transaction2)).start()
+					transaction2 = sql_query2
+					threading.Thread(target=exec_sql_query, args=(transaction1 + transaction2, )).start() # both request cannot be executed in separated thread. sql2 must be executed after sql1
 					sql_query1 = ""
 					sql_query2 = ""
 
@@ -164,11 +163,14 @@ for file in os.listdir("."):
 		end = datetime.datetime.now()
 		print("\tparsing done   : " , end, " => " , (end - start).seconds, "s")
 		transaction1 = sql_head1 + sql_query1[:-1] + sql_tail
-		transaction2 = sql_head2 + sql_query2[:-1] + sql_tail
-		connection.execute(transaction1)
-		connection.execute(transaction2)
+		transaction2 = sql_query2
+		connection.execute(transaction1 + transaction2)
 
+		current = 0
 		while job_in_progress > 0:
+			if current != job_in_progress:
+				print ("\tremaining sql job : ", job_in_progress)
+				current = job_in_progress
 			pass
 
 		end = datetime.datetime.now()
@@ -187,23 +189,23 @@ print("TEST SOME REQUESTS")
 
 # count sample
 with Timer() as t:
-	result = connection.execute("SELECT COUNT(*) FROM _7_sample")
+	result = connection.execute("SELECT COUNT(*) FROM _8_sample")
 print("Sample total : " , result.first()[0], " (", t, ")")
 
 #count sample_variant
 with Timer() as t:
-	result = connection.execute("SELECT COUNT(*) FROM _7_sample_variant")
+	result = connection.execute("SELECT COUNT(*) FROM _8_sample_variant")
 print("Variant total : " , result.first()[0], " (", t, ")")
 
 #count variant
 with Timer() as t:
-	result = connection.execute("SELECT COUNT(*) FROM _7_variant")
+	result = connection.execute("SELECT COUNT(*) FROM _8_variant")
 print("Distinct Variant total : " , result.first()[0], " (", t, ")")
 
 
 #count variant / sample
 with Timer() as t:
-	result = connection.execute("SELECT sample_id, COUNT(*) FROM _7_sample_variant GROUP BY sample_id")
+	result = connection.execute("SELECT sample_id, COUNT(*) FROM _8_sample_variant GROUP BY sample_id")
 print("\nCount variant by sample (", t, ")")
 for r in result:
 	print ("\tSample n°", r[0], " : ", r[1], " variants")
@@ -211,14 +213,14 @@ for r in result:
 
 # Get all variant with REF=A on chr5 for the sample 1
 with Timer() as t:
-	result = connection.execute("SELECT pos, alt FROM _7_sample_variant WHERE sample_id = 1 AND chr = '5' AND ref = 'A'")
+	result = connection.execute("SELECT v.pos, v.alt FROM _8_sample_variant sv INNER JOIN _8_variant v ON sv.variant_id = v.id WHERE sv.sample_id = 1 AND v.chr = '5' AND v.ref = 'A'")
 print("\nList variant of sample n°1, on chr5, with ref A : " , result.rowcount, " results (", t, ")")
 print ("\t", reprlib.repr((result)))
 
 
 # Test group by same table : 
 with Timer() as t:
-	result = connection.execute("SELECT chr, pos, ref, alt, count(sample_id ) as \"used\" FROM _7_sample_variant GROUP BY chr, pos, ref, alt ORDER BY \"used\" DESC")
+	result = connection.execute("SELECT v.chr, v.pos, v.ref, v.alt, count(sv.sample_id ) as \"used\" FROM _8_sample_variant sv INNER JOIN _8_variant v ON sv.variant_id = v.id GROUP BY v.chr, v.pos, v.ref, v.alt ORDER BY \"used\" DESC")
 
 print("\nCount how many variant are common by sample : " , result.rowcount, " results (", t, ")")
 t = 0
@@ -233,7 +235,7 @@ for r in result:
 
 
 with Timer() as t:
-	result = connection.execute("SELECT s.sample_id, v.is_transition, count(*) FROM _7_variant v INNER JOIN _7_sample_variant s ON v.chr = s.chr AND v.pos = s.pos AND v.ref = s.ref AND v.alt = s.alt GROUP BY v.is_transition, s.sample_id ORDER BY s.sample_id, v.is_transition")
+	result = connection.execute("SELECT sv.sample_id, v.is_transition, count(*) FROM _8_variant v INNER JOIN _8_sample_variant sv ON v.id = sv.variant_id GROUP BY v.is_transition, sv.sample_id ORDER BY sv.sample_id, v.is_transition")
 print("\nCheck Sequencing integrity : " , result.rowcount, " results (", t, ")")
 print("    sample : transition / transversion")
 s = 0
