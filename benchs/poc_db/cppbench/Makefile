@@ -5,11 +5,12 @@ CXX = g++
 LDFLAGS = \
 	-Lvcflib/lib \
 	-Lvcflib/tabixpp/htslib \
-	-lvcflib -lhts -lz -lpthread -lm
+	-lvcflib -lhts -lz -lpthread -lm \
+	-lpqxx -lpq
 
 INCLUDE = \
 	-I vcflib/include \
-	-I vcflib/tabixpp/htslib
+	-I vcflib/tabixpp/htslib \
 
 CCFLAGS = -Wall -Wextra -pedantic -std=c++11
 
