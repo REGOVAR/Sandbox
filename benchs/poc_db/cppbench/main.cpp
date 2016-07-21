@@ -1,11 +1,18 @@
 #include "Variant.h"
 #include <chrono>
+#include <thread> 
+#include <mutex> 
 #include <pqxx/pqxx> 
 
 using namespace std;
 using namespace chrono;
 using namespace vcflib;
 using namespace pqxx;
+
+
+mutex m;
+int jobInProgress = 0;
+
 
 
 void normalize(long& pos, string& ref, string& alt)
@@ -35,56 +42,65 @@ void normalize(long& pos, string& ref, string& alt)
 }
 
 
-
-int main(int argc, char** argv)
+void asynchSqlExec(string sqlQuery)
 {
+    m.lock();
+    jobInProgress += 1;
+    m.unlock();
+
+
+
+
     try
     {
         connection C("dbname=regovar-dev user=regovar password=regovar hostaddr=127.0.0.1 port=5433");
         if (C.is_open()) 
         {
-           cout << "Opened database successfully: " << C.dbname() << endl;
+            cout << "Opened database successfully: " << C.dbname() << endl;
         } 
         else 
         {
-           cout << "Can't open database" << endl;
-           return 1;
+            cout << "Can't open database" << endl;
+            m.lock();
+            jobInProgress -=1;
+            m.unlock();
         }
 
-        // check if tables exists
-        string sql;
-        sql = "SELECT EXISTS ( \
-                 SELECT 1 \
-                 FROM   information_schema.tables \
-                 WHERE  table_name = '_9_variant' \
-              );";
 
+        cout << " Start exec asynch " << jobInProgress << endl;
         nontransaction N(C);
-        result R( N.exec( sql ));
-        bool needToCreateTable = false;
-        for (result::const_iterator c = R.begin(); c != R.end(); ++c) 
-        {
-          needToCreateTable = !c[0].as<bool>();
-        }
-
-        if (needToCreateTable)
-        {
-            cout << "Create table for poc cpp" << endl;
-        }
+        N.exec( sqlQuery );
 
         C.disconnect ();
     }
     catch (const exception &e)
     {
+
         cerr << e.what() << endl;
-        return 1;
+
+        m.lock();
+        jobInProgress -=1;
+        m.unlock();
+
+        return;
     }
 
 
-    
+    m.lock();
+    jobInProgress -=1;
+    m.unlock();
+}
 
 
 
+
+
+
+
+
+
+int main(int argc, char** argv)
+{
     //return 0;
 
 
@@ -110,6 +126,10 @@ int main(int argc, char** argv)
     }
 
     Variant var(variantFile);
+    string sqlQuery = "";
+    string sqlHead  = "INSERT INTO _2_variant (sample_id, chr, pos, ref, alt, is_transition) VALUES ";
+    string sqlTail  = " ON CONFLICT DO NOTHING";
+    long count = 0;
     while (variantFile.getNextVariant(var)) 
     {
         //cout << "===== " << var.sequenceName << ", " << var.position << endl;
@@ -156,31 +176,48 @@ int main(int argc, char** argv)
             if (genotype[0] != "."  && genotype[0] != "0")
             {
                 int idx = stoi(genotype[0]);
+                sqlQuery += "(" + to_string(1) + ",'" + var.sequenceName + "'," + to_string(poss[idx]) + ",'" + refs[idx] + "','" + alts[idx] + "', TRUE ),";
+                ++count;
                 //cout << "[" << poss[idx] << ", " <<  refs[idx] << ", " << alts[idx] << "] ";
             }
             if (genotype[1] != "." && genotype[1] != "0")
             {
                 int idx = stoi(genotype[1]);
+                sqlQuery += "(" + to_string(1) + ",'" + var.sequenceName + "'," + to_string(poss[idx]) + ",'" + refs[idx] + "','" + alts[idx] + "', TRUE ),";
+                ++count;
                 //cout << "[" << poss[idx] << ", " <<  refs[idx] << ", " << alts[idx] << "] ";
             }
 
-            /*
-            for (auto& it2 : it.second) 
+            if (count > 1000000)
             {
-
-
-                cout << it2.first << "=" << it2.second[0] << " - ";
-            }*/
-            //cout << endl;
+                thread execReq(asynchSqlExec, sqlHead + sqlQuery.substr(0, sqlQuery.length()-1) + sqlTail); 
+                execReq.join();
+                sqlQuery = "";
+                count = 0;
+            }
         }
-        //cout << endl;
-        
-    }
+    } // end vcf parsing loop
 
     end = system_clock::now();
     duration<double> elapsed_seconds = end-start;
     cout << "parsing done in " << elapsed_seconds.count() << " s" << endl;
 
-    return 0;
 
+    thread execReq(asynchSqlExec, sqlHead + sqlQuery.substr(0, sqlQuery.length()-1) + sqlTail); 
+    execReq.join();
+    int current = 0;
+    while (jobInProgress > 0)
+    {
+        if (current != jobInProgress)
+        {
+          cout << "remaining sql job : " << jobInProgress;
+          current = jobInProgress;
+        }
+    }
+
+    end = system_clock::now();
+    elapsed_seconds = end-start;
+    cout << "import done in " << elapsed_seconds.count() << " s" << endl;
+
+    return 0;
 }
