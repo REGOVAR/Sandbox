@@ -10,6 +10,27 @@ using namespace vcflib;
 using namespace pqxx;
 
 
+
+/*
+CREATE TABLE public._2_variant
+(
+  bin integer,
+  chr character varying NOT NULL,
+  pos integer NOT NULL DEFAULT nextval('_2_variant_pos_seq'::regclass),
+  ref character varying NOT NULL,
+  alt character varying NOT NULL,
+  sample_id integer NOT NULL,
+  is_transition boolean,
+  CONSTRAINT _2_variant_uc PRIMARY KEY (chr, pos, ref, alt, sample_id),
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public._2_variant
+  OWNER TO regovar;
+
+*/
+
 mutex m;
 int jobInProgress = 0;
 
@@ -54,11 +75,7 @@ void asynchSqlExec(string sqlQuery)
     try
     {
         connection C("dbname=regovar-dev user=regovar password=regovar hostaddr=127.0.0.1 port=5433");
-        if (C.is_open()) 
-        {
-            cout << "Opened database successfully: " << C.dbname() << endl;
-        } 
-        else 
+        if (!C.is_open())
         {
             cout << "Can't open database" << endl;
             m.lock();
@@ -66,8 +83,6 @@ void asynchSqlExec(string sqlQuery)
             m.unlock();
         }
 
-
-        cout << " Start exec asynch " << jobInProgress << endl;
         nontransaction N(C);
         N.exec( sqlQuery );
 
