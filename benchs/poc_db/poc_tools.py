@@ -133,7 +133,7 @@ def normalize(pos, ref, alt):
 
 def is_transition(ref, alt):
 	tr = ref+alt
-	if tr in ('AG', 'GA', 'CT', 'TC'):
+	if len(ref) == 1 and tr in ('AG', 'GA', 'CT', 'TC'):
 		return True
 	return False
 
