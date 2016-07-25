@@ -3,6 +3,7 @@
 #include <thread> 
 #include <mutex> 
 #include <pqxx/pqxx> 
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
 using namespace chrono;
@@ -35,6 +36,17 @@ mutex m;
 int jobInProgress = 0;
 
 
+string normalizeChrm(string chrm)
+{
+    boost::to_upper(chrm);
+    if (boost::starts_with(chrm, "CHROM"))
+        chrm = chrm.substr(5);
+    if (boost::starts_with(chrm, "CHRM"))
+        chrm = chrm.substr(4);
+    if (boost::starts_with(chrm, "CHR"))
+        chrm = chrm.substr(3);
+    return chrm
+}
 
 void normalize(long& pos, string& ref, string& alt)
 {
@@ -205,8 +217,8 @@ int main(int argc, char** argv)
 
             if (count > 1000000)
             {
-                thread execReq(asynchSqlExec, sqlHead + sqlQuery.substr(0, sqlQuery.length()-1) + sqlTail); 
-                execReq.join();
+                //thread execReq(asynchSqlExec, sqlHead + sqlQuery.substr(0, sqlQuery.length()-1) + sqlTail); 
+                //execReq.join();
                 sqlQuery = "";
                 count = 0;
             }
