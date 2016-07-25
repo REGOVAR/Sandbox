@@ -173,6 +173,7 @@ int main(int argc, char** argv)
         cout << endl;*/
 
         // first we normalize all alleles for this vcf entry
+        string chrm = normalizeChrm(var.sequenceName);
         vector<string> alts = var.alleles;
         vector<long> poss;
         vector<string> refs;
@@ -203,14 +204,14 @@ int main(int argc, char** argv)
             if (genotype[0] != "."  && genotype[0] != "0")
             {
                 int idx = stoi(genotype[0]);
-                sqlQuery += "(" + to_string(1) + ",'" + var.sequenceName + "'," + to_string(poss[idx]) + ",'" + refs[idx] + "','" + alts[idx] + "', TRUE ),";
+                sqlQuery += "(" + to_string(1) + ",'" + chrm + "'," + to_string(poss[idx]) + ",'" + refs[idx] + "','" + alts[idx] + "', TRUE ),";
                 ++count;
                 //cout << "[" << poss[idx] << ", " <<  refs[idx] << ", " << alts[idx] << "] ";
             }
             if (genotype[1] != "." && genotype[1] != "0")
             {
                 int idx = stoi(genotype[1]);
-                sqlQuery += "(" + to_string(1) + ",'" + var.sequenceName + "'," + to_string(poss[idx]) + ",'" + refs[idx] + "','" + alts[idx] + "', TRUE ),";
+                sqlQuery += "(" + to_string(1) + ",'" + chrm + "'," + to_string(poss[idx]) + ",'" + refs[idx] + "','" + alts[idx] + "', TRUE ),";
                 ++count;
                 //cout << "[" << poss[idx] << ", " <<  refs[idx] << ", " << alts[idx] << "] ";
             }
