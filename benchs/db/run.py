@@ -24,7 +24,7 @@ logging.basicConfig(filename=CONFIG["LOG_FILE"],level=logging.INFO)
 # Import all bench
 
 BENCHES = {}
-BENCHES["B007"] = poc_007.Bench(CONFIG)
+BENCHES["B008"] = poc_008.Bench(CONFIG)
 
 
 for key, bench in BENCHES.items():

@@ -1,3 +1,0 @@
-[submodule "benchs/poc_db/cppbench/vcflib"]
-	path = benchs/poc_db/cppbench/vcflib
-	url = https://github.com/vcflib/vcflib.git

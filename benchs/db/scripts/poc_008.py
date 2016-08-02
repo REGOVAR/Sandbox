@@ -30,42 +30,36 @@ from pysam import VariantFile
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 class SampleVariant(SQLBase):
-	__tablename__ = '_7_sample_variant'
-	sample_id = Column(Integer, ForeignKey('_7_sample.id'),   primary_key=True, nullable=False)
-	chr       = Column(String,   primary_key=True, nullable=False)
-	pos       = Column(Integer,  primary_key=True, nullable=False)
-	ref       = Column(String,   primary_key=True, nullable=False)
-	alt       = Column(String,   primary_key=True, nullable=False)
+	__tablename__ = '_8_sample_variant'
+	sample_id  = Column(Integer, ForeignKey('_8_sample.id'),   primary_key=True, nullable=False)
+	variant_id = Column(Integer, ForeignKey('_8_variant.id'),  primary_key=True, nullable=False)
 	# genotype = Column(JSONB, nullable=True)
 	# infos = Column(Array(String, dimensions=2))
-	__table_args__ = (Index('_7_sample_variant_idx', 'sample_id', 'chr', 'pos', 'ref', 'alt', unique=True), UniqueConstraint('sample_id', 'chr', 'pos', 'ref', 'alt', name='_7_sample_variant_uc'), )
-	#variants = relationship("Variant", back_populates="samples")
-	#samples  = relationship("Sample", back_populates="variants")
+	__table_args__ = (Index('_8_sample_variant_idx', 'sample_id', 'variant_id', unique=True), UniqueConstraint('sample_id', 'variant_id', name='_8_sample_variant_uc'), )
 
 class Sample(SQLBase):
-	__tablename__ = '_7_sample'
+	__tablename__ = '_8_sample'
 	id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
 	name = Column(String)
-	description = Column(String)
 	#variants = relationship("SampleVariant", back_populates="samples")
 	def __str__(self):
 		return "<Sample(name='%s')>" % (self.name)
 
 
 class Variant(SQLBase):
-	__tablename__ = '_7_variant'
+	__tablename__ = '_8_variant'
+	id  = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
 	bin = Column(Integer)
-	chr = Column(String,  primary_key=True, nullable=False)
-	pos = Column(Integer, primary_key=True, nullable=False)
-	ref = Column(String,  primary_key=True, nullable=False)
-	alt = Column(String,  primary_key=True, nullable=False)
+	chr = Column(String,  nullable=False)
+	pos = Column(Integer, nullable=False)
+	ref = Column(String,  nullable=False)
+	alt = Column(String,  nullable=False)
 	is_transition = Column(Boolean)
 	#samples = relationship("SampleVariant", back_populates="variants")
-	__table_args__ = (Index('_7_variant_idx', 'chr', 'pos', 'ref', 'alt', unique=True), UniqueConstraint('chr', 'pos', 'ref', 'alt', name='_7_variant_uc'), )
+	__table_args__ = (Index('_8_variant_idx', 'chr', 'pos', 'ref', 'alt', unique=True), UniqueConstraint('chr', 'pos', 'ref', 'alt', name='_3_variant_uc'), )
 
 	def __str__(self):
 		return "<Variant(id='%s', chr='%s', pos='%s', ref='%s', alt='%s')>" % (self.id, self.chr, self.pos, self.ref, self.alt)
-
 
 
 
@@ -76,7 +70,7 @@ class Bench(PostgreBench):
 	def __init__(self, config):
 		super(Bench, self).__init__(config)
 
-		self.description = "Benchmark n°7\n - PySam\n - Model : Sample & Variant & SampleVariant (id on chr, pos, ref, alt)\n - SQLAlchemy using raw sql query\n - Parsing on main thread - SQL query exec on multithread"
+		self.description = "Benchmark n°8\n - PySam\n - Model : Sample & Variant & SampleVariant (id on PK id)\n - SQLAlchemy using raw sql query\n - Parsing on main thread - SQL query exec on multithread"
 
 
 
@@ -95,9 +89,9 @@ class Bench(PostgreBench):
 		# parsing vcf file
 		log("\n\r\tsamples  :  (" + str(len(samples.keys())) + ") " + str(reprlib.repr([s for s in samples.keys()])))
 		bar = Bar('\tparsing  : ', max=records_count, suffix='%(percent).1f%% - %(elapsed_td)s')
-		sql_head1 = "INSERT INTO _7_variant (chr, pos, ref, alt, is_transition) VALUES "
-		sql_head2 = "INSERT INTO _7_sample_variant (sample_id, chr, pos, ref, alt) VALUES "
-		sql_tail = " ON CONFLICT DO NOTHING"
+		sql_head1 = "INSERT INTO _8_variant (chr, pos, ref, alt, is_transition) VALUES "
+		sql_pattern2 = "INSERT INTO _8_sample_variant (sample_id, variant_id) SELECT %s, id FROM _8_variant WHERE chr='%s' AND pos=%s AND ref='%s' AND alt='%s' ON CONFLICT DO NOTHING;"
+		sql_tail = " ON CONFLICT DO NOTHING;"
 		sql_query1 = ""
 		sql_query2 = ""
 		count = 0
@@ -111,23 +105,22 @@ class Bench(PostgreBench):
 				pos, ref, alt = normalize(r.pos, r.ref, s.alleles[0])
 
 				if alt != ref :
-					sql_query1 = sql_query1.join("('%s', %s, '%s', '%s', %s)," % (chrm, str(pos), ref, alt, is_transition(ref, alt)))
-					sql_query2 = sql_query2.join("(%s, '%s', %s, '%s', '%s')," % (str(samples[sn].id), chrm, str(pos), ref, alt))
+					sql_query1 += "('%s', %s, '%s', '%s', %s)," % (chrm, str(pos), ref, alt, is_transition(ref, alt))
+					sql_query2 += sql_pattern2 % (str(samples[sn].id), chrm, str(pos), ref, alt)
 					count += 1
 
 				pos, ref, alt = normalize(r.pos, r.ref, s.alleles[1])
 				if alt != ref :
-					sql_query1 = sql_query1.join("('%s', %s, '%s', '%s', %s)," % (chrm, str(pos), ref, alt, is_transition(ref, alt)))
-					sql_query2 = sql_query2.join("(%s, '%s', %s, '%s', '%s')," % (str(samples[sn].id), chrm, str(pos), ref, alt))
+					sql_query1 += "('%s', %s, '%s', '%s', %s)," % (chrm, str(pos), ref, alt, is_transition(ref, alt))
+					sql_query2 += sql_pattern2 % (str(samples[sn].id), chrm, str(pos), ref, alt)
 					count += 1
 
 				# manage split big request to avoid sql out of memory transaction
-				if count >= 1000000:
+				if count >= 50000:
 					count = 0
 					transaction1 = sql_head1 + sql_query1[:-1] + sql_tail
-					transaction2 = sql_head2 + sql_query2[:-1] + sql_tail
-					threading.Thread(target=self.exec_sql_query, args=(transaction1, )).start()
-					threading.Thread(target=self.exec_sql_query, args=(transaction2, )).start()
+					transaction2 = sql_query2
+					threading.Thread(target=self.exec_sql_query, args=(transaction1 + transaction2, )).start() # both request cannot be executed in separated thread. sql2 must be executed after sql1
 					sql_query1 = ""
 					sql_query2 = ""
 
@@ -135,9 +128,8 @@ class Bench(PostgreBench):
 
 		bar.finish()
 		transaction1 = sql_head1 + sql_query1[:-1] + sql_tail
-		transaction2 = sql_head2 + sql_query2[:-1] + sql_tail
-		self.connection.execute(transaction1)
-		self.connection.execute(transaction2)
+		transaction2 = sql_query2
+		self.connection.execute(transaction1 + transaction2)
 
 		while self.job_in_progress > 0:
 			pass
