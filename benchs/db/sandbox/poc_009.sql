@@ -178,3 +178,123 @@ WHERE v.id>=1763588 AND v.id <=1764588
 -- ~55 ms
 
 -- => en fait les join sont 5 à 8 fois plus optimisé que les arrays... :/ même quand ont travaille sur un petit volume. ça doit venir de la meilleure gestion des index au niveau des tables
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT v.chr, v.pos, v.ref, v.alt, array_agg(rg.name)
+FROM _6_variant v
+INNER JOIN refgene rg ON v.chr = rg.chrom AND v.pos >= rg.txstart AND v.pos <= rg.txend
+WHERE v.sample_id = 1
+GROUP BY v.chr, v.pos, v.ref, v.alt
+LIMIT 10000
+-- 10000 - 16.2s
+--  1000 -  1.1s
+
+
+SELECT v.chr, v.pos, v.ref, v.alt, array_agg(rg.name)
+FROM _6_variant v
+INNER JOIN refgene rg ON v.chr = rg.chrom AND rg.txrange @> int8(v.pos)
+WHERE v.sample_id = 1
+GROUP BY v.chr, v.pos, v.ref, v.alt
+LIMIT 10000
+-- 10000 - 10.6s
+--  1000 -  0.8s
+
+SELECT v.chr, v.pos, v.ref, v.alt
+FROM _6_variant v
+WHERE v.sample_id = 1
+GROUP BY v.chr, v.pos, v.ref, v.alt
+LIMIT 1000
+-- 10000 - 0.2s
+--  1000 - 0.05s
+
+
+
+
+
+
+
+
+SELECT v.chr, v.pos, v.ref, v.alt, array_agg(rg.name)
+FROM _7_sample_variant v
+INNER JOIN refgene rg ON v.chr = rg.chrom AND v.pos >= rg.txstart AND v.pos <= rg.txend
+WHERE v.sample_id = 1
+GROUP BY v.chr, v.pos, v.ref, v.alt
+LIMIT 10000
+-- 10000 - 16.3s
+--  1000 -  1.0s
+
+
+SELECT v.chr, v.pos, v.ref, v.alt, array_agg(rg.name)
+FROM _7_sample_variant v
+INNER JOIN refgene rg ON v.chr = rg.chrom AND rg.txrange @> int8(v.pos)
+WHERE v.sample_id = 1
+GROUP BY v.chr, v.pos, v.ref, v.alt
+LIMIT 1000
+-- 10000 - 10.8s
+--  1000 -  0.7s
+
+
+SELECT v.chr, v.pos, v.ref, v.alt
+FROM _7_sample_variant v
+WHERE v.sample_id = 1
+GROUP BY v.chr, v.pos, v.ref, v.alt
+LIMIT 1000
+-- 10000 - 0.2s
+--  1000 - 0.05s
+
+
+
+
+
+
+
+SELECT v.chr, v.pos, v.ref, v.alt, array_agg(rg.name)
+FROM _8_variant v
+INNER JOIN _8_sample_variant s ON s.variant_id = v.id
+INNER JOIN refgene rg ON v.chr = rg.chrom AND v.pos >= rg.txstart AND v.pos <= rg.txend
+WHERE s.sample_id = 1
+GROUP BY v.id
+LIMIT 10000
+-- 10000 - 22.6s
+--  1000 -  1.6s
+
+
+SELECT v.chr, v.pos, v.ref, v.alt, array_agg(rg.name)
+FROM _8_variant v
+INNER JOIN _8_sample_variant s ON s.variant_id = v.id
+INNER JOIN refgene rg ON v.chr = rg.chrom AND rg.txrange @> int8(v.pos)
+WHERE s.sample_id = 1
+GROUP BY v.id
+LIMIT 1000
+-- 10000 - 9.5s
+--  1000 -  0.7s
+
+
+SELECT v.chr, v.pos, v.ref, v.alt
+FROM _8_variant v
+INNER JOIN _8_sample_variant s ON s.variant_id = v.id
+WHERE s.sample_id = 1
+GROUP BY v.chr, v.pos, v.ref, v.alt
+LIMIT 1000
+-- 10000 - 0.3s
+--  1000 - 0.05s
