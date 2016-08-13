@@ -27,6 +27,7 @@ CREATE TABLE public."user"
 	location character varying(255) COLLATE pg_catalog."C.UTF-8",
 	function character varying(255) COLLATE pg_catalog."C.UTF-8",
 	last_activity_date timestamp without time zone,
+	settings text, 
 	CONSTRAINT user_pkey PRIMARY KEY (id),
 	CONSTRAINT user_email_key UNIQUE (email)
 )
@@ -108,35 +109,35 @@ ALTER TABLE public.template
 
 
 
-CREATE SEQUENCE public.analyze_id_seq
+CREATE SEQUENCE public.analysis_id_seq
 	INCREMENT 1
 	MINVALUE 1
 	MAXVALUE 9223372036854775807
 	START 1
 	CACHE 1;
-ALTER TABLE public.analyze_id_seq
+ALTER TABLE public.analysis_id_seq
 	OWNER TO regovar;
-CREATE TABLE public.analyze
+CREATE TABLE public.analysis
 (
-	id integer NOT NULL DEFAULT nextval('analyze_id_seq'::regclass),
+	id integer NOT NULL DEFAULT nextval('analysis_id_seq'::regclass),
 	name character varying(50) COLLATE pg_catalog."C.UTF-8" NOT NULL,
 	project_id integer NOT NULL,
 	comments text COLLATE pg_catalog."C.UTF-8",
 	template_id integer NOT NULL,
-	template_config text COLLATE pg_catalog."C.UTF-8",
-	CONSTRAINT analyze_pkey PRIMARY KEY (id),
-	CONSTRAINT analyze_project_id_fkey FOREIGN KEY (project_id)
+	template_settings text COLLATE pg_catalog."C.UTF-8",
+	CONSTRAINT analysis_pkey PRIMARY KEY (id),
+	CONSTRAINT analysis_project_id_fkey FOREIGN KEY (project_id)
 		REFERENCES public."project" (id) MATCH SIMPLE
 		ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT analyze_template_id_fkey FOREIGN KEY (template_id)
+	CONSTRAINT analysis_template_id_fkey FOREIGN KEY (template_id)
 		REFERENCES public."template" (id) MATCH SIMPLE
 		ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT analyze_project_id_name_key UNIQUE (project_id, name)
+	CONSTRAINT analysis_project_id_name_key UNIQUE (project_id, name)
 )
 WITH (
 	OIDS=FALSE
 );
-ALTER TABLE public.analyze
+ALTER TABLE public.analysis
 	OWNER TO regovar;
 
 
@@ -152,32 +153,14 @@ ALTER TABLE public.selection_id_seq
 CREATE TABLE public.selection
 (
 	id integer NOT NULL DEFAULT nextval('selection_id_seq'::regclass),
+	analysis_id integer NOT NULL,
 	name character varying(50) COLLATE pg_catalog."C.UTF-8" NOT NULL,
 	comments text COLLATE pg_catalog."C.UTF-8",
 	"order" integer,
 	query text COLLATE pg_catalog."C.UTF-8",
-	CONSTRAINT selection_pkey PRIMARY KEY (id)
-)
-WITH (
-	OIDS=FALSE
-);
-ALTER TABLE public.selection
-	OWNER TO regovar;
-
-
-
-
-
-
-CREATE TABLE public.analyze_selection
-(
-	analyze_id integer NOT NULL,
-	selection_id integer NOT NULL,
-	CONSTRAINT analyze_selection_analyze_id_fkey FOREIGN KEY (analyze_id)
-		REFERENCES public."analyze" (id) MATCH SIMPLE
-		ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT analyze_selection_selection_id_fkey FOREIGN KEY (selection_id)
-		REFERENCES public."selection" (id) MATCH SIMPLE
+	CONSTRAINT selection_pkey PRIMARY KEY (id),
+	CONSTRAINT selection_analysis_id_fkey FOREIGN KEY (analysis_id)
+		REFERENCES public."analysis" (id) MATCH SIMPLE
 		ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
@@ -185,6 +168,9 @@ WITH (
 );
 ALTER TABLE public.selection
 	OWNER TO regovar;
+
+
+
 
 
 
