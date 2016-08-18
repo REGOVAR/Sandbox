@@ -1,8 +1,10 @@
 -- 
--- CREATE ALL
+-- CREATE ALL - V1.0.0
 --
 
 CREATE TYPE tpl_status AS ENUM ('draft', 'released', 'validated');
+CREATE TYPE analysis_status AS ENUM ('created', 'queued', 'importing', 'filtering', 'done', 'closed', 'diagnostic');
+CREATE TYPE subject_relation_type AS ENUM ('parent', 'unknow');
 CREATE TYPE regmut_pathos AS ENUM ('class1', 'class2', 'class3', 'class4a', 'class4b', 'class5');
 CREATE TYPE regmut_contrib AS ENUM ('none', 'uncertain', 'partial', 'full');
 
@@ -54,21 +56,16 @@ CREATE TABLE public.project
 	id integer NOT NULL DEFAULT nextval('project_id_seq'::regclass),
 	name character varying(50) COLLATE pg_catalog."C.UTF-8" NOT NULL,
 	comments text COLLATE pg_catalog."C.UTF-8",
-	owner_id integer NOT NULL,
-	creation_date timestamp without time zone NOT NULL,
-	update_date timestamp without time zone NOT NULL,
-	is_archived boolean NOT NULL DEFAULT false,
-	CONSTRAINT project_pkey PRIMARY KEY (id),
-	CONSTRAINT project_owner_id_fkey FOREIGN KEY (owner_id)
-		REFERENCES public."user" (id) MATCH SIMPLE
-		ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT project_name_owner_id_key UNIQUE (name, owner_id)
+	parent_id integer,
+	data text COLLATE pg_catalog."C.UTF-8",
+	CONSTRAINT project_pkey PRIMARY KEY (id)
 )
 WITH (
 	OIDS=FALSE
 );
 ALTER TABLE public.project
 	OWNER TO postgres;
+
 
 
 
@@ -121,10 +118,15 @@ CREATE TABLE public.analysis
 (
 	id integer NOT NULL DEFAULT nextval('analysis_id_seq'::regclass),
 	name character varying(50) COLLATE pg_catalog."C.UTF-8" NOT NULL,
+	owner_id integer NOT NULL,
 	project_id integer NOT NULL,
 	comments text COLLATE pg_catalog."C.UTF-8",
 	template_id integer NOT NULL,
 	template_settings text COLLATE pg_catalog."C.UTF-8",
+	creation_date timestamp without time zone NOT NULL,
+	update_date timestamp without time zone NOT NULL,
+	is_archived boolean NOT NULL DEFAULT false,
+	status analysis_status NOT NULL DEFAULT 'created'::analysis_status,
 	CONSTRAINT analysis_pkey PRIMARY KEY (id),
 	CONSTRAINT analysis_project_id_fkey FOREIGN KEY (project_id)
 		REFERENCES public."project" (id) MATCH SIMPLE
@@ -132,7 +134,10 @@ CREATE TABLE public.analysis
 	CONSTRAINT analysis_template_id_fkey FOREIGN KEY (template_id)
 		REFERENCES public."template" (id) MATCH SIMPLE
 		ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT analysis_project_id_name_key UNIQUE (project_id, name)
+	CONSTRAINT analysis_project_id_name_key UNIQUE (project_id, name),
+	CONSTRAINT analysis_owner_id_fkey FOREIGN KEY (owner_id)
+		REFERENCES public."user" (id) MATCH SIMPLE
+		ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
 	OIDS=FALSE
@@ -188,7 +193,6 @@ ALTER TABLE public.subject_id_seq
 CREATE TABLE public.subject
 (
 	id integer NOT NULL DEFAULT nextval('subject_id_seq'::regclass),
-	parent_id integer,
 	name character varying(255) COLLATE pg_catalog."C.UTF-8",
 	contact character varying(255) COLLATE pg_catalog."C.UTF-8",
 	comments text COLLATE pg_catalog."C.UTF-8",
@@ -199,6 +203,24 @@ WITH (
 );
 ALTER TABLE public.subject
 	OWNER TO regovar;
+
+
+
+
+CREATE TABLE public.subject_relation
+(
+	subject1_id integer NOT NULL,
+	subject2_id integer NOT NULL,
+	relation subject_relation_type NOT NULL DEFAULT 'parent'::subject_relation_type,
+	CONSTRAINT subject_relation_pkey PRIMARY KEY (subject1_id, subject2_id, relation),
+)
+WITH (
+	OIDS=FALSE
+);
+ALTER TABLE public.subject_relation
+	OWNER TO regovar;
+
+
 
 
 
@@ -297,7 +319,6 @@ CREATE TABLE public.sample
 	name character varying(50) COLLATE pg_catalog."C.UTF-8" NOT NULL,
 	description character varying(255) COLLATE pg_catalog."C.UTF-8",
 	subject_id integer NOT NULL,
-	file_id integer NOT NULL,
 	CONSTRAINT sample_pkey PRIMARY KEY (id),
 	CONSTRAINT sample_subject_id_fkey FOREIGN KEY (subject_id)
 		REFERENCES public."subject" (id) MATCH SIMPLE
@@ -314,11 +335,31 @@ ALTER TABLE public.sample
 
 
 
+CREATE TABLE public.sample_file
+(
+	sample_id integer NOT NULL,
+	file_id integer NOT NULL,
+	CONSTRAINT sample_file_pkey PRIMARY KEY (sample_id, file_id),
+	CONSTRAINT sample_file_sample_id_fkey FOREIGN KEY (sample_id)
+		REFERENCES public."sample" (id) MATCH SIMPLE
+		ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT sample_file_file_id_fkey FOREIGN KEY (file_id)
+		REFERENCES public."file" (id) MATCH SIMPLE
+		ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+	OIDS=FALSE
+);
+ALTER TABLE public.sample_file
+	OWNER TO regovar;
+
+
 
 CREATE TABLE public.project_sample
 (
 	project_id integer NOT NULL,
 	sample_id integer NOT NULL,
+	CONSTRAINT project_sample_pkey PRIMARY KEY (project_id, sample_id),
 	CONSTRAINT project_sample_project_id_fkey FOREIGN KEY (project_id)
 		REFERENCES public."project" (id) MATCH SIMPLE
 		ON UPDATE NO ACTION ON DELETE NO ACTION,
@@ -329,7 +370,7 @@ CREATE TABLE public.project_sample
 WITH (
 	OIDS=FALSE
 );
-ALTER TABLE public.selection
+ALTER TABLE public.project_sample
 	OWNER TO regovar;
 
 
@@ -384,7 +425,6 @@ CREATE TABLE public.regmut_hg19
 	alt text NOT NULL,
 	variant_id integer,
 	subject_list integer[],
-
 	phenotype character varying(255) COLLATE pg_catalog."C.UTF-8",
 	inheritance character varying(255) COLLATE pg_catalog."C.UTF-8",
 	pathogenicity regmut_pathos,
@@ -431,22 +471,38 @@ ALTER TABLE public.variant_hg19
 
 
 
+CREATE TABLE public."parameter"
+(
+	key character varying(255) COLLATE pg_catalog."C.UTF-8" NOT NULL ,
+	value character varying(255) COLLATE pg_catalog."C.UTF-8" NOT NULL,
+	description character varying(255) COLLATE pg_catalog."C.UTF-8",
+	CONSTRAINT parameter_pkey PRIMARY KEY (key)
+)
+WITH (
+	OIDS=FALSE
+);
+ALTER TABLE public."parameter"
+	OWNER TO postgres;
+
+
 --
 -- INIT DATA
 --
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+
+
 INSERT INTO public.reference (name, description, url, table_suffix) VALUES
 	("Human Genom 19", "Human Genom version 19", "", "hg19");
 
 
 
-
---
--- CREATE INDEX
---
-
-
-
-
+INSERT INTO public."parameter" (key, description, value) VALUES
+	("DatabaseVersion",        "The current version of the database",                                      "V1.0.0"),
+	("HeavyClientLastVersion", "Last complient version of the heavy client",                               "V1.0.0"),
+	("HeavyClient",            "Information for the Launcher to be able to download/update the client",    "{}"),
+	("LastBackupDate",         "The date of the last database dump",                                       to_char(current_timestamp, 'YYYY-MM-DD')),
+	("RegovarDatabaseUUID",    "Unique ID of the Regovar database", "The current version of the database", uuid_generate_v4());
 
 
 
