@@ -298,3 +298,22 @@ GROUP BY v.chr, v.pos, v.ref, v.alt
 LIMIT 1000
 -- 10000 - 0.3s
 --  1000 - 0.05s
+
+
+
+
+
+
+
+
+
+
+
+SELECT v.chr, v.pos, v.ref, v.alt, array_agg(rg.name)
+FROM _10_variant v
+INNER JOIN _10_sample_variant s ON s.variant_id = v.id
+INNER JOIN refgene rg ON v.chr = rg.chrom AND rg.txrange @> int8(v.pos)
+WHERE s.sample_id = 15
+GROUP BY v.id
+LIMIT 1000
+-- 12 - 0.3s
