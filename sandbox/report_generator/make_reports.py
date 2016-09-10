@@ -283,7 +283,7 @@ def extract_genes(vcf_filename, min_variant_count):
             for snpeff_annotation in snpeff_annotations:
                 gene = snpeff_annotation.split('|')[gene_name_column_number]
                 if gene:
-                    genes.setdefault(gene, set()).add((row.chrom, row.pos, row.ref, row.alts))
+                    genes.setdefault(gene, set()).add((str(row.chrom), str(row.pos), str(row.ref), str(row.alts)))
     return sorted([Gene(gene, variants) for gene, variants in genes.items() if len(variants) >= min_variant_count], key = lambda gene: gene.name)
 
 def render_report(data, template_name):
@@ -473,6 +473,10 @@ def get_pubmed(gene_name):
 def get_data():
     logger.info('Listing VCF files and indexes...')
     data = get_indexes_filenames()
+    _data = {} # TODO FIXME testing, remove this
+#    _data['02-03-SJ'] = data['02-03-SJ'] # TODO FIXME testing, remove this
+    _data['08-04-VO'] = data['08-04-VO'] # TODO FIXME testing, remove this
+    data = _data # TODO FIXME testing, remove this
     logger.info('Extracting gene information...')
     for index, index_data in data.items():
         for mode, mode_data in index_data.items():
