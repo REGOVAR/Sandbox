@@ -10,6 +10,7 @@ import json
 import logging
 import os
 import pprint
+import pysam
 import requests
 import shutil
 import subprocess
@@ -204,7 +205,6 @@ class Gene:
     __cache = {}
     def __init__(self, name, variants):
         self.name = name
-        self.synonyms = []
         self.variants = variants
         self.data = Gene.__cache.setdefault(name, GeneData(name))
         self.aliases = itertools.chain([self.name], sorted(set(self.data.symbols) - set([self.name])))
@@ -241,26 +241,50 @@ def get_indexes_filenames():
             result.setdefault(index, collections.OrderedDict())[mode] = ModeData(filename, min_variant_count)
     return collections.OrderedDict(sorted(result.items(), key = lambda index: index[3:5] + index[0:2] + index[6:9]))
 
-def extract_genes(vcf_filename, min_variant_count):
-    all_genes = {}
-    vcf_reader = VariantFile(vcf_filename)
-        for r in vcf_reader:
-            sampleName = r.infos["MENDEL"]
-            r
-            
+def get_snpeff_annotation_id(info):
+    if 'ANN' in info:
+        snpeff_annotation_id = 'ANN'
+        if 'EFF' in info:
+            logger.warning('Found both ANN and EFF in header, using ANN')
+    elif 'EFF' in info:
+        snpeff_annotation_id = 'EFF'
+    else:
+        snpeff_annotation_id = None
+        logger.warning('Neither EFF nor ANN found in header')
+    return snpeff_annotation_id
 
-        if not line.startswith('#'):
-            columns = line.rstrip().split('\t')
-            info = columns[7]
-            annotation = info.split('EFF=' in info and 'EFF=' or 'ANN=')[1].split(';')[0]
-            variant_genes = {}
-            for effect in annotation.split(','):
-                gene = effect.split('|')[3]
+def get_snpeff_annotation_columns(snpeff_metadata):
+    #metadata: contenu de la ligne info qui contient un id en particulier
+    annotations = [annotation.strip() for annotation in snpeff_metadata.description.split("'")[1].split('|')]
+    snpeff_annotation_columns = {annotation: position for position, annotation in enumerate(annotations)}
+    return snpeff_annotation_columns
+
+def extract_genes(vcf_filename, min_variant_count):
+    print(vcf_filename)
+    try:
+        vcf_context = pysam.VariantFile(vcf_filename)
+    except ValueError:
+        logger.warning('Error while loading {}, probably bug #259 of pysam'.format(vcf_filename))
+        return []
+    with vcf_context as vcf_file:
+        snpeff_annotation_id = get_snpeff_annotation_id(vcf_file.header.info)
+        if snpeff_annotation_id is None:
+            logger.warning('SnpEff annotation ID (ANN or EFF) not found in header for {}'.format(vcf_filename))
+            return []
+        snpeff_metadata = vcf_file.header.info[snpeff_annotation_id]
+        snpeff_annotation_columns = get_snpeff_annotation_columns(snpeff_metadata)
+        if 'Gene_Name' not in snpeff_annotation_columns:
+            logger.warning('Gene_Name not found in SnpEff annotation description in header for {}'.format(vcf_filename))
+            return []
+        gene_name_column_number = snpeff_annotation_columns['Gene_Name']
+        genes = {}
+        for row in vcf_file:
+            snpeff_annotations = row.info[snpeff_annotation_id]
+            for snpeff_annotation in snpeff_annotations:
+                gene = snpeff_annotation.split('|')[gene_name_column_number]
                 if gene:
-                    variant_genes.setdefault(gene, set()).add(tuple(columns[0:5]))
-            for gene, variants in variant_genes.items():
-                all_genes.setdefault(gene, set()).update(variants)
-    return sorted([Gene(gene, variants) for gene, variants in all_genes.items() if len(variants) >= min_variant_count], key = lambda gene: gene.name)
+                    genes.setdefault(gene, set()).add((row.chrom, row.pos, row.ref, row.alts))
+    return sorted([Gene(gene, variants) for gene, variants in genes.items() if len(variants) >= min_variant_count], key = lambda gene: gene.name)
 
 def render_report(data, template_name):
     template = templates.get_template('{}.tpl'.format(template_name))
@@ -299,7 +323,7 @@ def get_hbt_image(gene_name):
         else:
             logger.warning('Unable to find the HBT diagram for {}'.format(gene_name))
     except:
-        logger.error('Unable to convert PDF from HBT to PNG for the gene {}'.format(gene_name))
+        logger.warning('Unable to convert PDF from HBT to PNG for the gene {}'.format(gene_name))
     with open(missing_filename, 'wb') as image:
         pass
     return None
@@ -319,8 +343,8 @@ def get_sp_image(gene_name):
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, image_file)
         return image_filename
-    except e:
-        logger.error('Unable to retrieve image from String Pathway for the gene {}'.format(gene_name))
+    except:
+        logger.warning('Unable to retrieve image from String Pathway for the gene {}'.format(gene_name))
     with open(missing_filename, 'wb') as image:
         pass
     return None
@@ -346,7 +370,7 @@ def get_decipher_image(gene_name, output_folder):
                 os.remove(dec_filename + '_source.png')
                 return dec_filename
     else:
-        logger.error('Unable to retrieve image from Decipher for the gene {}'.format(gene_name))
+        logger.warning('Unable to retrieve image from Decipher for the gene {}'.format(gene_name))
 
     return output_folder + '/error.png'
 
@@ -452,14 +476,7 @@ def get_data():
     logger.info('Extracting gene information...')
     for index, index_data in data.items():
         for mode, mode_data in index_data.items():
-            # with gzip.open(mode_data.vcf_filename, 'rt') as vcf:
             mode_data.genes = extract_genes(mode_data.vcf_filename, mode_data.min_variant_count)
-            
-
-    _data = {} # TODO FIXME testing, remove this
-#    _data['02-03-SJ'] = data['02-03-SJ'] # TODO FIXME testing, remove this
-    _data['08-04-VO'] = data['08-04-VO'] # TODO FIXME testing, remove this
-    data = _data # TODO FIXME testing, remove this
     return data
 
 if __name__ == '__main__':
