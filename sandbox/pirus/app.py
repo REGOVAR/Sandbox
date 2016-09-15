@@ -93,7 +93,32 @@ class ApiHandler(web.RequestHandler):
 
 
 
+class AnalisisCRUDHandler(web.RequestHandler):
+	@web.asynchronous
+	def get(self):
+		print ("GET analysis/")
 
+
+	@web.asynchronous
+	def get(self, id):
+		print ("GET analysis/<id>")
+
+	@web.asynchronous
+	def post(self):
+		print ("POST analysis/")
+
+	@web.asynchronous
+	def delete(self, id):
+		print ("DELETE analysis/<id>")
+
+	@web.asynchronous
+	def get(self, id, action):
+		if action == "status":
+			print ("GET analysis/<id>/status")
+		elif action == "stdout":
+			print ("GET analysis/<id>/stdout")
+		elif action == "stderr":
+			print ("GET analysis/<id>/stderr")
 
 
 
@@ -105,6 +130,11 @@ app = web.Application([
 	(r'/api', ApiHandler),
 	(r'/run/(\w+)/(\d+)', PluginRunHandler), 
 	(r'/notify/(\w+)/(\w+)/(\d+)', PluginNotificationHandler), 
+
+	(r'/analysis', AnalisisHandler), 
+	(r'/analysis/(\d+)', AnalisisHandler), 
+	(r'/analysis/(\d+)/(\w+)', AnalisisHandler), 
+
 	(r'/(favicon.ico)', web.StaticFileHandler, {'path': '../'}),
 	(r'/(rest_api_example.png)', web.StaticFileHandler, {'path': './'}),
 	])

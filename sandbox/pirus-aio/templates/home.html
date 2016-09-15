@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>tornado WebSocket example</title>
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Pirus - aioHTTP/WebSocket</h1>
+    <hr>
+      WebSocket status : <span id="message"></span>
+    <hr>
+    <h3>Connected users</h3>
+    <ul>
+        {% for c in cl %}
+            <li>{{ c }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Pirus available plugins </h3>
+    <ul>
+        {% for p in pa %}
+            <li>{{ p }}</li>
+        {% endfor %}
+    </ul>
+    
+    <h3>Pirus running plugins </h3>
+    <ul>
+        {% for p in pr %}
+            <li>{{ p }}</li>
+        {% endfor %}
+    </ul>
+
+
+  </div>
+
+  <script>
+    var ws = new WebSocket('ws://localhost:8888/ws');
+    var $message = $('#message');
+    ws.onopen = function()
+    {
+        $message.attr("class", 'label label-success');
+        $message.text('open');
+
+        ws.send('{"action" : "authent", "data" : "Chrome"}')
+    };
+    ws.onmessage = function(ev)
+    {
+        debugger;
+        $message.attr("class", 'label label-info');
+        $message.hide();
+        $message.fadeIn("slow");
+        var json = JSON.parse(ev.data);
+
+        $message.text('message recieved : ' + json["action"]);
+
+
+        switch(json["action"])
+        {
+          case 'usersList':
+            for (i=0; i < lenght(json["data"]); i++)
+            {
+              $('#u' + i).text(json["data"][i]);
+            }
+            break;
+          case 'plugin_state':
+            $message.text("plugin_state : " + json["data"]);
+        }
+
+
+
+
+       
+    };
+    ws.onclose = function(ev)
+    {
+        $message.attr("class", 'label label-important');
+        $message.text('closed');
+    };
+    ws.onerror = function(ev)
+    {
+        $message.attr("class", 'label label-warning');
+        $message.text('error occurred');
+    };
+  </script>
+</body>
+</html> 
