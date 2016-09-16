@@ -13,31 +13,27 @@
       WebSocket status : <span id="message"></span>
     <hr>
     <h3>Connected users</h3>
-    <ul>
-        {% for c in cl %}
-            <li>{{ c }}</li>
-        {% endfor %}
-    </ul>
+    <p id="userList"></p>
 
     <h3>Pirus available plugins </h3>
-    <ul>
+    <p id="aPlugins">
         {% for p in pa %}
-            <li>{{ p }}</li>
+            - {{ p }} <br/>
         {% endfor %}
-    </ul>
+    </p>
     
     <h3>Pirus running plugins </h3>
-    <ul>
+    <up id="rPlugins">
         {% for p in pr %}
-            <li>{{ p }}</li>
+            - {{ p }}<br/>
         {% endfor %}
-    </ul>
+    </p>
 
 
   </div>
 
   <script>
-    var ws = new WebSocket('ws://localhost:8888/ws');
+    var ws = new WebSocket('ws://localhost:8080/ws');
     var $message = $('#message');
     ws.onopen = function()
     {
@@ -48,31 +44,35 @@
     };
     ws.onmessage = function(ev)
     {
-        debugger;
         $message.attr("class", 'label label-info');
         $message.hide();
         $message.fadeIn("slow");
         var json = JSON.parse(ev.data);
 
-        $message.text('message recieved : ' + json["action"]);
+        dt = new Date()
+        $message.text('Last message recieved at ' + dt.toLocaleTimeString() + ' : ' + json["action"]);
 
 
         switch(json["action"])
         {
-          case 'usersList':
-            for (i=0; i < lenght(json["data"]); i++)
+          case 'online_user':
+            var uTxt = ""
+            $.each(json["data"], function (idx, val)
             {
-              $('#u' + i).text(json["data"][i]);
-            }
+                uTxt += " - " + val + "</br>\n"
+            })
+            $('#userList').html(uTxt)
             break;
-          case 'plugin_state':
-            $message.text("plugin_state : " + json["data"]);
+
+          case 'plugin_notify':
+            var uTxt = ""
+            $.each(json["data"], function (idx, val)
+            {
+                uTxt += " - " + val + "</br>\n"
+            })
+            $('#rPlugins').html(uTxt)
+            break;
         }
-
-
-
-
-       
     };
     ws.onclose = function(ev)
     {

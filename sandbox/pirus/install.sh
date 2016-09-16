@@ -8,6 +8,8 @@ sudo pip3 install tornado celery
 
 sudo pip3 install aiohttp
 sudo pip3 install aiohttp_jinja2
+sudo pip3 install pluginloader
+
 
 # Run Celery (in a new shell)
 celery worker -A tasks_manager --loglevel=info -Q MyPluginQueue
