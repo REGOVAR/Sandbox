@@ -83,8 +83,14 @@ def fmk_check_pipeline_package(path:str):
 	# check manifest.json, mandatory fields :
 	pass
 
-def fmk_check 
-
+def fmk_get_pipeline_forlder_name(name:str):
+	cheked_name = ""
+	for l in name:
+		if l.isalnum() or l in [".", "-", "_"]:
+			cheked_name += l
+		if l == " ":
+			cheked_name += "_"
+	return cheked_name;
 
 
 def plugins_available():
@@ -149,7 +155,7 @@ class PipelineHandler:
 			pdir = os.path.join(ppackage_path, os.listdir(ppackage_path)[0])
 		fmk_check_pipeline_package(pdir)
 		data = json.load(open(os.path.join(pdir, 'manifest.json')))
-		data.update({"path":os.path.join(PLUGINS_DIR, data["name"] + "_" + data["version"])})
+		data.update({"path":os.path.join(PLUGINS_DIR, fmk_get_pipeline_forlder_name(data["name"]) + "_" + fmk_get_pipeline_forlder_name(data["version"]))})
 		shutil.move(pdir, data["path"])
 		# 5- Save pipeline into database
 		pipeline = Pipeline()

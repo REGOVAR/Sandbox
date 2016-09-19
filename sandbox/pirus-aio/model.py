@@ -12,6 +12,7 @@ from bson.objectid import ObjectId
 class User(Document):
 	firstname = StringField(max_length=255)
 	lastname  = StringField(max_length=255)
+	email     = EmailField(max_length=255)
 	is_admin  = BooleanField()
 
 	def export_data(self):
@@ -19,6 +20,7 @@ class User(Document):
 			"firstname": self.firstname,
 			"lastname" : self.lastname, 
 			"is_admin" : self.is_admin,
+			"email"    : self.email,
 			"id": str(self.pk)
 		}
 
@@ -26,6 +28,7 @@ class User(Document):
 		try:
 			self.firstname = data['firstname']
 			self.lastname  = data['lastname']
+			self.email     = data['email']
 			self.is_admin  = data['is_admin']
 		except KeyError as e:
 			raise ValidationError('Invalid user: missing ' + e.args[0])
@@ -42,9 +45,14 @@ class User(Document):
 
 
 class Pipeline(Document):
-	name    = StringField(max_length=255)
-	version = StringField(max_length=10)
-	path    = StringField(required=True)
+	name          = StringField(max_length=50, required=True)
+	version       = StringField(max_length=10, required=True)
+	description   = StringField(max_length=255)
+	pirus_api_v   = StringField(max_length=10, required=True)
+	path          = StringField(required=True)
+	license       = StringField(max_length=50)
+	input_allowed = ListField(StringField(max_length=10))
+	developer     = StringField(max_length=100)
 	
 	def __str__(self):
 		return self.path
@@ -53,15 +61,25 @@ class Pipeline(Document):
 		return {
 			"name" : self.name,
 			"version" : self.version,
+			"pirus_api_v" : self.pirus_api_v,
+			"description" : self.description,
+			"license" : self.license,
+			"developer" : self.developer,
+			"input_allowed" : self.input_allowed,
 			"path": self.path, 
 			"id": str(self.pk)
 		}
 
 	def import_data(self, data):
 		try:
-			self.name    = data['name']
-			self.version = data['version']
-			self.path    = data['path']
+			self.name          = data['name']
+			self.version       = data['version']
+			self.pirus_api_v   = data["pirus_api_v"]
+			self.description   = data["description"]
+			self.license       = data["license"]
+			self.developer     = "" #str(data["developer"])
+			self.input_allowed = data["input_allowed"]
+			self.path          = data['path']
 		except KeyError as e:
 			raise ValidationError('Invalid pipeline: missing ' + e.args[0])
 		return self 
