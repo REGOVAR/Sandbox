@@ -1,1 +1,4 @@
- 
+ {
+ 	"param1" : "value",
+ 	"param2" : 1
+ }

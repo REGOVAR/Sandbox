@@ -94,7 +94,7 @@ class Pipeline(Document):
 
 	def get_config(self):
 		conf = None
-		path = os.path.join(self.path, 'config.json')
+		path = os.path.join(self.path, 'config.default.json')
 		if os.path.isfile(path):
 			with open(path, 'r') as content_file:
 				conf = content_file.read()
@@ -134,7 +134,10 @@ class Run(Document):
 			"user_id": self.user_id, 
 			"start": self.start,
 			"end": self.end,
-			"status": self.status
+			"status": self.status,
+			"inputLst"  : self.inputLst,
+			"outputLst" : self.outputLst,
+			"progress" : self.progress
 		}
 
 	def import_data(self, data):
@@ -143,8 +146,16 @@ class Run(Document):
 			self.celery_id = data['celery_id']
 			self.user_id   = data['user_id']
 			self.start     = data['start']
-			self.end       = data['end']
 			self.status    = data['status']
+			if "end" in data:
+				self.end = data['end']
+			if "inputLst" in data:
+				self.inputLst = data["inputLst"]
+			if "outputLst" in data:
+				self.outputLst = data["outputLst"]
+			if "progress" in data:
+				self.progress = data["progress"]
+
 		except KeyError as e:
 			raise ValidationError('Invalid plugin: missing ' + e.args[0])
 		return self 

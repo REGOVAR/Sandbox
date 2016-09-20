@@ -1,0 +1,14 @@
+{
+	"name"		    : "Plugin Test Sacha",
+	"version"       : "1.0.0",
+	"description"   : "Un test pour tester la gestion des packages dans Pirus.",
+	"pirus_api_v"   : "1.0.0",
+	"license"       : "AGPL",
+	"input_allowed" : [],
+	"developer"     : 
+	{
+		"name"    : "Olivier",
+		"url"     : "https://github.com/orgs/REGOVAR/dashboard",
+	    "email"   : "olivier@gueudelot.fr" 
+	}
+} 

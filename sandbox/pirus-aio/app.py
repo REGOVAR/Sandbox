@@ -8,6 +8,7 @@ import aiohttp_jinja2
 import jinja2
 import zipfile
 import shutil
+import time
 
 from aiohttp import web, MultiDict
 from model import *
@@ -20,11 +21,7 @@ from tasks_manager import execute_plugin
 
 
 # CONFIG
-ERROR_ROOT_URL = "api.pirus.org/errorcode/"
-PIRUS_API_V  = "1.0.0"
-PLUGINS_DIR  = os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins/")
-TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates/")
-RUN_DIR      = os.path.join(os.path.dirname(os.path.abspath(__file__)), "runs/")
+from config import *
 
 ''' creat/connect database '''
 connect('pirus')
@@ -33,8 +30,8 @@ connect('pirus')
 # CHECK 
 if not os.path.exists(RUN_DIR):
 	os.makedirs(RUN_DIR)
-if not os.path.exists(PLUGINS_DIR):
-	os.makedirs(PLUGINS_DIR)
+if not os.path.exists(PIPELINES_DIR):
+	os.makedirs(PIPELINES_DIR)
 if not os.path.exists(TEMPLATE_DIR):
 	print("ERROR : Templates directory doesn't exists.", TEMPLATE_DIR)
 
@@ -79,6 +76,7 @@ def fmk_rest_error(message:str="Unknow", code:str="0", error_id:str=""):
 
 
 def fmk_check_pipeline_package(path:str):
+	# TODO
 	# files mandatory : plugin.py, form.qml, manifest.json, config.json
 	# check manifest.json, mandatory fields :
 	pass
@@ -93,19 +91,24 @@ def fmk_get_pipeline_forlder_name(name:str):
 	return cheked_name;
 
 
-def plugins_available():
-	return os.listdir(PLUGINS_DIR)
+def fmk_plugins_available():
+	return Pipeline.objects.all() 
 
 
 rp = {}
-def plugins_running():
-	return rp.keys()
+def fmk_plugins_running():
+	return [r[0].export_data() for r in rp.values()]
 
 
-def notify_all(src, msg):
+def fmk_notify_all(src, msg):
 	for ws in app['websockets']:
 		if src != ws[1]:
 			ws[0].send_str(msg)
+
+
+
+
+
 
 
 
@@ -119,8 +122,8 @@ class WebsiteHandler:
 	def home(self, request):
 		return {
 			"cl" : list([ws[1] for ws in app['websockets']]), 
-			"pr" : plugins_running(), 
-			"pa" : plugins_available()
+			"pr" : fmk_plugins_running(), 
+			"pa" : fmk_plugins_available()
 		}
 
 
@@ -131,16 +134,16 @@ class PipelineHandler:
 		pass
 
 	def get(self, request):
-		print ("GET pipeline/")
 		return fmk_rest_success({"plugins" : plugins_available()})
 
 	async def post(self, request):
 		# 1- Retrieve pirus package from post request
 		data = await request.post()
+		print ("salue", data['pipepck'])
 		ppackage = data['pipepck']
 		# 2- save file into server plugins directory (with a random name to avoid problem if filename already exists)
 		ppackage_name = str(uuid.uuid4())
-		ppackage_path = os.path.join(PLUGINS_DIR, ppackage_name)
+		ppackage_path = os.path.join(PIPELINES_DIR, ppackage_name)
 		ppackage_file = ppackage_path + ".zip"
 		with open(ppackage_file, 'bw+') as f:
 			f.write(ppackage.file.read())
@@ -155,7 +158,7 @@ class PipelineHandler:
 			pdir = os.path.join(ppackage_path, os.listdir(ppackage_path)[0])
 		fmk_check_pipeline_package(pdir)
 		data = json.load(open(os.path.join(pdir, 'manifest.json')))
-		data.update({"path":os.path.join(PLUGINS_DIR, fmk_get_pipeline_forlder_name(data["name"]) + "_" + fmk_get_pipeline_forlder_name(data["version"]))})
+		data.update({"path":os.path.join(PIPELINES_DIR, fmk_get_pipeline_forlder_name(data["name"]) + "_" + fmk_get_pipeline_forlder_name(data["version"]))})
 		shutil.move(pdir, data["path"])
 		# 5- Save pipeline into database
 		pipeline = Pipeline()
@@ -169,41 +172,49 @@ class PipelineHandler:
 		
 
 	def delete(self, request):
-		id = request.match_info.get('id', -1)
-		print ("DELETE pipeline/<id=" + str(id) + ">")
-		return web.Response(body=b"DELETE pipeline/<id>")
+		# 1- Retrieve pirus pipeline from post request
+		pipe_id = request.match_info.get('pipe_id', -1)
+		# 2- Check that the user is allowed to remove the package (owner or admin)
+		# Todo
+		# 3- Check that the pipeline is not running
+		# Todo
+		# 4- Remove pipeline files
+
+		# 5- Remove pipeline informations in database
+		print ("DELETE pipeline/<id=" + str(pipe_id) + ">")
+		return fmk_rest_success("Uninstall of pipeline " + str(pipe_id) + " success.")
 
 	def get_details(self, request):
-		id = request.match_info.get('id', -1)
-		if id == -1:
-			return fmk_rest_error("Unknow pipeline id " + str(id))
-		return fmk_rest_success({"results": Pipeline.objects.get(pk=id).export_data()})
+		pipe_id = request.match_info.get('pipe_id', -1)
+		if pipe_id == -1:
+			return fmk_rest_error("Unknow pipeline id " + str(pipe_id))
+		return fmk_rest_success(Pipeline.objects.get(pk=pipe_id).export_data())
 
 	async def get_qml(self, request):
-		id = request.match_info.get('id', -1)
-		if id == -1:
+		pipe_id = request.match_info.get('pipe_id', -1)
+		if pipe_id == -1:
 			return fmk_rest_error("Id not found")
-		pipeline = Pipeline.objects.get(pk=id)
+		pipeline = Pipeline.objects.get(pk=pipe_id)
 		if pipeline is None:
-			return fmk_rest_error("Unknow pipeline id " + str(id))
+			return fmk_rest_error("Unknow pipeline id " + str(pipe_id))
 		qml = pipeline.get_qml()
 		if qml is None:
-			return fmk_rest_error("QML not found for the plugin " + str(id))
+			return fmk_rest_error("QML not found for the plugin " + str(pipe_id))
 		return web.Response(
 			headers=MultiDict({'Content-Disposition': 'Attachment'}),
 			body=str.encode(qml)
 		)
 
 	def get_config(self, request):
-		id = request.match_info.get('id', -1)
-		if id == -1:
+		pipe_id = request.match_info.get('pipe_id', -1)
+		if pipe_id == -1:
 			return fmk_rest_error("Id not found")
-		pipeline = Pipeline.objects.get(pk=id)
+		pipeline = Pipeline.objects.get(pk=pipe_id)
 		if pipeline is None:
-			return fmk_rest_error("Unknow pipeline id " + str(id))
+			return fmk_rest_error("Unknow pipeline id " + str(pipe_id))
 		conf = pipeline.get_config()
 		if conf is None:
-			return fmk_rest_error("Config not found for the plugin " + str(id))
+			return fmk_rest_error("Config not found for the plugin " + str(pipe_id))
 		return web.Response(
 			headers=MultiDict({'Content-Disposition': 'Attachment'}),
 			body=str.encode(conf)
@@ -216,53 +227,99 @@ class RunHandler:
 		pass
 
 	def get(self, request):
-		print ("GET run/")
-		return web.Response(body=b"GET run/")
+		return fmk_rest_success([r.export_data() for r in Run.objects.all().limit(10)])
+
 
 	async def post(self, request):
+		# 1- Retrieve data from request
 		data = await request.json()
-		name = data["name"]
-		fullpath = os.path.join(PLUGINS_DIR, name)
+		pipe_id = data["pipeline_id"]
 		config = data["config"]
-		print ("POST run/ => ask celery to run task "+ str(name) + ", " + str(config))
-		cw = execute_plugin.delay(fullpath, config)
-		rp[cw.id] = (name, -1)
-
-		return web.Response(body=b"POST run/<name>/<config>")
+		# 2- Load pipeline from database
+		pipeline = Pipeline.from_id(pipe_id)
+		if pipeline is None:
+			return fmk_rest_error("Unknow pipeline id " + str(pipe_id))
+		# 3- Enqueue run of the pipeline with celery
+		try:
+			cw = execute_plugin.delay(pipeline.path, config)
+		except:
+			# TODO : clean filesystem
+			return fmk_rest_error("Enable to run the pipeline with celery " + str(pipe_id))
+		# 4- Keep celery task procy in memory, and store run information into database
+		run = Run()
+		run.import_data({
+			"pipe_id" : pipe_id,
+			"celery_id" : str(cw.id),
+			"user_id" : pipe_id, # TODO : user id ?
+			"start" : time.ctime(),
+			"status" : "INIT"
+		})
+		run.save()
+		rp[str(cw.id)] = (run, cw)
+		# 5- return result
+		return fmk_rest_success(run.export_data())
 
 	def delete(self, request):
-		id = request.match_info.get('id', -1)
-		print ("DELETE run/<id=" + str(id) + ">")
+		run_id = request.match_info.get('run_id', -1)
+		print ("DELETE run/<id=" + str(run_id) + ">")
 		return web.Response(body=b"DELETE run/<id>")
 
 	def get_status(self, request):
-		id = request.match_info.get('id', -1)
-		print ("GET run/<id=" + str(id) + ">/status")
+		run_id = request.match_info.get('run_id', -1)
+		print ("GET run/<id=" + str(run_id) + ">/status")
 		return web.Response(body=b"GET run/<id>/status")
 
 	def get_log(self, request):
-		id = request.match_info.get('id', -1)
-		print ("GET run/<id=" + str(id) + ">/log")
+		run_id = request.match_info.get('run_id', -1)
+		print ("GET run/<id=" + str(run_id) + ">/log")
 		return web.Response(body=b"GET run/<id>/log")
 
 	def get_err(self, request):
-		id = request.match_info.get('id', -1)
-		print ("GET run/<id=" + str(id) + ">/err")
+		run_id = request.match_info.get('run_id', -1)
+		print ("GET run/<id=" + str(run_id) + ">/err")
 		return web.Response(body=b"GET run/<id>/err")
 
-	def up_status(self, request):
-		pid      = request.match_info.get('pid', -1)
-		name     = request.match_info.get('name', "?")
-		progress = request.match_info.get('progress', -1)
-		print("RunHandler[up_status] : taskid=" + pid + " name="+name + " : " + str(progress) )
 
-		rp[pid] = (name, progress)
+	def get_files(self, request):
+		run_id  = request.match_info.get('run_id',  -1)
+		file_id = request.match_info.get('file_id', -1)
 
-		msg = '{"action":"plugin_notify", "data" : [' + ','.join(['"' + str(k) + ':' + rp[k][0] + ' = ' + str(rp[k][1]) + '%"' for k in rp.keys()]) + ']}'
-		notify_all(None, msg)
+	def get_file(self, request):
+		run_id  = request.match_info.get('run_id',  -1)
+		file_id = request.match_info.get('file_id', -1)
 
+	def up_progress(self, request):
+		run_id = request.match_info.get('run_id', -1)
+		data   = request.text()
+		print("RunHandler[up_progress] : taskid=" + run_id, data)
+		if run_id in rp:
+			run = rp[run_id][0]
+			run.progress = str(data)
+			run.save()
+		# Todo else retrieve run from db and update if exists, else ignore
+		data = []
+		for run in rp.values():
+			data.append(run[0].export_data())
+		msg = '{"action":"run_progress", "data" : ' + json.dumps(data) + '}'
+		fmk_notify_all(None, msg)
 		return web.Response()
 
+	def up_status(self, request):
+		run_id = request.match_info.get('run_id', -1)
+		status = request.match_info.get('status', None)
+		print("RunHandler[up_status] : taskid=" + run_id , status)
+		if run_id in rp:
+			run = rp[run_id][0]
+			run.status = status
+			run.save()
+		# Todo else retrieve run from db and update if exists, else ignore
+		# Todo manage when status is done, error or failed, to clean server memory by removing celery token
+		data = []
+		for run in rp.values():
+			data.append(run[0].export_data())
+		msg = '{"action":"run_progress", "data" : ' + json.dumps(data) + '}'
+		fmk_notify_all(None, msg)
+		return web.Response()
 
 
 
@@ -283,7 +340,7 @@ class WebsocketHandler:
 		app['websockets'].append((ws, ws_id))
 		print (len(app['websockets']))
 		msg = '{"action":"online_user", "data" : [' + ','.join(['"' + _ws[1] + '"' for _ws in app['websockets']]) + ']}'
-		notify_all(None, msg)
+		fmk_notify_all(None, msg)
 		print(msg)
 
 		try:
@@ -293,6 +350,12 @@ class WebsocketHandler:
 						await ws.close()
 					else:
 						# Analyse message sent by client and send response if needed
+						data = msg.json()
+						if data["action"] == "user_info":
+							print("WebsocketHandler", data["action"])
+
+
+
 						pass
 				elif msg.tp == aiohttp.MsgType.error:
 					print('ws connection closed with exception %s' % ws.exception())
@@ -338,21 +401,25 @@ app.router.add_route('GET',    '/ws', websocket.get)
 
 app.router.add_route('GET',    '/pipeline', pipeHdl.get)
 app.router.add_route('POST',   '/pipeline', pipeHdl.post)
-app.router.add_route('DELETE', '/pipeline', pipeHdl.delete)
-app.router.add_route('GET',    '/pipeline/{id}', pipeHdl.get_details)
-app.router.add_route('GET',    '/pipeline/{id}/qml', pipeHdl.get_qml)
-app.router.add_route('GET',    '/pipeline/{id}/config', pipeHdl.get_config)
+app.router.add_route('DELETE', '/pipeline/{pipe_id}', pipeHdl.delete)
+app.router.add_route('GET',    '/pipeline/{pipe_id}', pipeHdl.get_details)
+app.router.add_route('GET',    '/pipeline/{pipe_id}/qml', pipeHdl.get_qml)
+app.router.add_route('GET',    '/pipeline/{pipe_id}/config', pipeHdl.get_config)
 
 app.router.add_route('GET',    '/run', runHdl.get)
 app.router.add_route('POST',   '/run', runHdl.post)
-app.router.add_route('GET',    '/run/{id}', runHdl.get_status)
-app.router.add_route('GET',    '/run/{id}/status', runHdl.get_status)
-app.router.add_route('GET',    '/run/{id}/log', runHdl.get_log)
-app.router.add_route('GET',    '/run/{id}/err', runHdl.get_err)
-app.router.add_route('GET',    '/run/{pid}/notify/{name}/{progress}', runHdl.up_status)
+app.router.add_route('GET',    '/run/{run_id}', runHdl.get_status)
+app.router.add_route('GET',    '/run/{run_id}/status', runHdl.get_status)
+app.router.add_route('GET',    '/run/{run_id}/log', runHdl.get_log)
+app.router.add_route('GET',    '/run/{run_id}/err', runHdl.get_err)
+app.router.add_route('GET',    '/run/{run_id}/files', runHdl.get_files)
+app.router.add_route('GET',    '/run/{run_id}/file/{file_id}', runHdl.get_file)
+
+app.router.add_route('GET',    '/run/notify/{run_id}', runHdl.up_progress)
+app.router.add_route('GET',    '/run/notify/{run_id}/status/{status}', runHdl.up_status)
 
 
-
+app.router.add_static('/assets', TEMPLATE_DIR)
 
 
 
