@@ -114,22 +114,23 @@ class Pipeline(Document):
 		pass
 
 
-
-
 class Run(Document):
 	pipe_id   = ObjectIdField(required=True)
+	pipe_name = StringField(requiered=True)
 	celery_id = StringField(required=True)
-	user_id   = ObjectIdField(required=True)
-	start     = DateTimeField(required=True)
-	end       = DateTimeField()
+	user_id   = ObjectIdField()
+	start     = StringField(required=True)
+	end       = StringField()
 	status    = StringField()
 	inputLst  = StringField()
 	outputLst = StringField()
-	progress  = StringField()
+	prog_val  = StringField(required=True)
+	prog_info = StringField()
 
 	def export_data(self):
 		return {
 			"pipe_id" : self.pipe_id,
+			"pipe_name" : self.pipe_name,
 			"celery_id" : self.celery_id,
 			"user_id": self.user_id, 
 			"start": self.start,
@@ -137,24 +138,28 @@ class Run(Document):
 			"status": self.status,
 			"inputLst"  : self.inputLst,
 			"outputLst" : self.outputLst,
-			"progress" : self.progress
+			"prog_val" : self.prog_val,
+			"prog_info" : self.prog_info
 		}
 
 	def import_data(self, data):
 		try:
 			self.pipe_id   = data['pipe_id']
+			self.pipe_name = data['pipe_name']
 			self.celery_id = data['celery_id']
 			self.user_id   = data['user_id']
 			self.start     = data['start']
 			self.status    = data['status']
+			self.prog_val  = data['prog_val']
 			if "end" in data:
 				self.end = data['end']
 			if "inputLst" in data:
 				self.inputLst = data["inputLst"]
 			if "outputLst" in data:
 				self.outputLst = data["outputLst"]
-			if "progress" in data:
-				self.progress = data["progress"]
+			if "prog_info" in data:
+				self.prog_info = data["prog_info"]
+
 
 		except KeyError as e:
 			raise ValidationError('Invalid plugin: missing ' + e.args[0])

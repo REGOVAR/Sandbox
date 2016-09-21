@@ -6,9 +6,7 @@
 sudo apt install rabbitmq-server
 sudo pip3 install tornado celery
 
-sudo pip3 install aiohttp
-sudo pip3 install aiohttp_jinja2
-sudo pip3 install pluginloader
+sudo pip3 install celery aiohttp aiohttp_jinja2 pluginloader
 
 
 # Run Celery (in a new shell)

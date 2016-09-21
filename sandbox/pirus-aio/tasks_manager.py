@@ -53,12 +53,10 @@ class PirusTask(Task):
 
     def notify_progress(self, task_name:str, completion:float, status:str=None, msg:str=None):
         data = { 
-            "name" : task_name,
-            "completion" : completion,
-            "status" : status,
-            "msg" : msg
+            "progress" : str(completion),
+            "info" : task_name
         }
-        requests.get(self.notify_url, data=json.dumps(data))
+        requests.get(self.notify_url + "/" + str(completion))
         print ("send notify progress : ", self.notify_url)
 
     def notify_status(self, status:str):

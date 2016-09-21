@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/base-min.css">
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
     <link rel="stylesheet" href="/assets/blog.css"/>
+    <link rel="stylesheet" href="/assets/progress.css"/>
     <link rel="stylesheet" href="/assets/font-awesome-4.6.3/css/font-awesome.min.css"/>
-    <
+
 </head>
 <body>
 
@@ -25,7 +26,7 @@
             <nav class="nav">
                 <ul class="nav-list">
                     <li class="nav-item">
-                        <a class="pure-button" href="/www/about"> <i class="fa fa-question" aria-hidden="true"></i> About</a>
+                        <a class="pure-button" href="/www/about"><i class="fa fa-code" aria-hidden="true"></i> Swagger</a>
                         <a class="pure-button" href="https://github.com/orgs/REGOVAR/dashboard"><i class="fa fa-github" aria-hidden="true"></i> GitHub</a>
                         <!--<a class="pure-button" href=""> <i class="fa fa-power-off" aria-hidden="true"></i> Disconnect</a>-->
                     </li>
@@ -39,9 +40,9 @@
             <!-- A wrapper for all the blog posts -->
             <div>
                 <h1 class="content-subhead"><i class="fa fa-user" aria-hidden="true"></i>  User online</h1>
-                <ul>
+                <!--<ul>
                     <li>You are : <input type="text" name="username" id="username" placeholder="John Snow" /> </li>
-                </ul>
+                </ul>-->
                 <ul id="userList">
                     {% for u in users %}
                         <li>{{ u["username"] }} : {{ u["data"] }}</li>
@@ -68,9 +69,41 @@
                     <i>No run in progress.</i>
                     {% endif %}
                     {% for p in pr %}
-                        <li>{{ p }}</li>
+                        <li>
+                        <span style="display:inline-block; width:100px;">{{ p["type"] }}</span>
+                        <span style="display:inline-block; width:100px;">{{ p["name"] }}</span> 
+                        <span style="display:inline-block; width:100px;">{{ p["by"] }}</span>
+                        <div class="cssProgress">
+                            <div class="progress3">
+                                <div class="cssProgress-bar cssProgress-active" data-percent="{{ p["progress_value"] }}" style="width:{{ p["progress_value"] }}%;">
+                                    <span class="cssProgress-label">{{ p["progress_value"] }}%</span> 
+                                </div>
+                            </div>
+                        </div>
+                        <span style="display:inline-block; width:100px;">{{ p["start"] }}</span>
+                        <span style="display:inline-block; width:100px;">{{ p["status"] }}</span>
+                        <a class="pure-button" title="Information about the run" href="http://localhost:8080/run/{{p["id"]}}" target="_blanck"><i class="fa fa-info" aria-hidden="true"></i></a> 
+                        <a class="pure-button" title="Output log file" href="http://localhost:8080/run/{{p["id"]}}/log" target="_blanck"><i class="fa fa-file-text-o" aria-hidden="true"> log</i></a>
+                        <a class="pure-button" title="Error log file" href="http://localhost:8080/run/{{p["id"]}}/err" target="_blanck"><i class="fa fa-file-text-o" aria-hidden="true"> err</i></a>
+
+                        </li>
                     {% endfor %}
                 </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 <br />
                 <h1 class="content-subhead"><i class="fa fa-plus" aria-hidden="true"></i> Install a new pipeline</h1>
@@ -174,6 +207,7 @@
 
 
 
+
     ws.onopen = function()
     {
         $message.attr("class", 'label label-success');
@@ -205,7 +239,21 @@
                 var uTxt = ""
                 $.each(json["data"], function (idx, val)
                 {
-                    uTxt += "<li>" + val["pipe_id"] + " : " + val["start"] + " : " + val["status"]  + "</li>\n"
+                    uTxt += "<li>\
+                        <span style='display:inline-block; width:150px;'>" + val["pipe_id"] + "</span>\
+                        <span style='display:inline-block; width:150px;'>" + val["pipe_name"] + "</span>\
+                        <div class='cssProgress'>\
+                            <div class='progress3'>\
+                                <div class='cssProgress-bar cssProgress-active' data-percent='" + val["prog_val"] + "' style='width:" + val["prog_val"] + "%;'>\
+                                    <span class='cssProgress-label'>" + val["prog_val"] + "%</span>\
+                                </div>\
+                            </div>\
+                        </div>\
+                        <span style='display:inline-block; width:100px;'>" + val["status"] + "</span>\
+                        <a class='pure-button' title='Information about the run' href='http://localhost:8080/run/" + val["pipe_id"] + "' target='_blanck'><i class='fa fa-info' aria-hidden='true'></i></a> \
+                        <a class='pure-button' title='Output log file' href='http://localhost:8080/run/" + val["pipe_id"] + "/log' target='_blanck'><i class='fa fa-info' aria-hidden='true'></i></a> \
+                        <a class='pure-button' title='Error log file' href='http://localhost:8080/run/" + val["pipe_id"] + "/err' target='_blanck'><i class='0fa fa-info' aria-hidden='true'></i></a> \
+                        </li>\n"
                 })
                 $('#runsList').html(uTxt)
                 break;

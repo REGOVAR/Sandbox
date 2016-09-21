@@ -8,6 +8,7 @@ import aiohttp_jinja2
 import jinja2
 import zipfile
 import shutil
+import datetime
 import time
 
 from aiohttp import web, MultiDict
@@ -249,10 +250,12 @@ class RunHandler:
 		run = Run()
 		run.import_data({
 			"pipe_id" : pipe_id,
+			"pipe_name" : pipeline.name + " (" + pipeline.version + ") toto",
 			"celery_id" : str(cw.id),
 			"user_id" : pipe_id, # TODO : user id ?
-			"start" : time.ctime(),
-			"status" : "INIT"
+			"start" : str(datetime.datetime.now().timestamp()),
+			"status" : "INIT",
+			"prog_val" : "0"
 		})
 		run.save()
 		rp[str(cw.id)] = (run, cw)
@@ -290,16 +293,17 @@ class RunHandler:
 
 	def up_progress(self, request):
 		run_id = request.match_info.get('run_id', -1)
-		data   = request.text()
-		print("RunHandler[up_progress] : taskid=" + run_id, data)
+		complete = request.match_info.get('complete', None)
+		print("RunHandler[up_progress] : taskid=" + run_id, complete)
 		if run_id in rp:
 			run = rp[run_id][0]
-			run.progress = str(data)
+			run.prog_val = complete
 			run.save()
 		# Todo else retrieve run from db and update if exists, else ignore
 		data = []
 		for run in rp.values():
 			data.append(run[0].export_data())
+		print( json.dumps(data))
 		msg = '{"action":"run_progress", "data" : ' + json.dumps(data) + '}'
 		fmk_notify_all(None, msg)
 		return web.Response()
@@ -415,7 +419,7 @@ app.router.add_route('GET',    '/run/{run_id}/err', runHdl.get_err)
 app.router.add_route('GET',    '/run/{run_id}/files', runHdl.get_files)
 app.router.add_route('GET',    '/run/{run_id}/file/{file_id}', runHdl.get_file)
 
-app.router.add_route('GET',    '/run/notify/{run_id}', runHdl.up_progress)
+app.router.add_route('GET',    '/run/notify/{run_id}/{complete}', runHdl.up_progress)
 app.router.add_route('GET',    '/run/notify/{run_id}/status/{status}', runHdl.up_status)
 
 
