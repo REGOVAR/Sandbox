@@ -96,9 +96,14 @@ def fmk_plugins_available():
 	return Pipeline.objects.all() 
 
 
-rp = {}
-def fmk_plugins_running():
-	return [r[0].export_data() for r in rp.values()]
+
+def fmk_last_runs():
+	return [r.export_data() for r in Run.objects.all().order_by('-start')[0:10]]
+
+
+def fmk_plugin_running_task(task_id):
+	result = execute_plugin.AsyncResult(task_id)
+	return result.get()
 
 
 def fmk_notify_all(src, msg):
@@ -123,7 +128,7 @@ class WebsiteHandler:
 	def home(self, request):
 		return {
 			"cl" : list([ws[1] for ws in app['websockets']]), 
-			"pr" : fmk_plugins_running(), 
+			"pr" : fmk_last_runs(), 
 			"pa" : fmk_plugins_available()
 		}
 
@@ -195,7 +200,7 @@ class PipelineHandler:
 		pipe_id = request.match_info.get('pipe_id', -1)
 		if pipe_id == -1:
 			return fmk_rest_error("Id not found")
-		pipeline = Pipeline.objects.get(pk=pipe_id)
+		pipeline = Pipeline.from_id(pipe_id)
 		if pipeline is None:
 			return fmk_rest_error("Unknow pipeline id " + str(pipe_id))
 		qml = pipeline.get_qml()
@@ -210,7 +215,7 @@ class PipelineHandler:
 		pipe_id = request.match_info.get('pipe_id', -1)
 		if pipe_id == -1:
 			return fmk_rest_error("Id not found")
-		pipeline = Pipeline.objects.get(pk=pipe_id)
+		pipeline = Pipeline.from_id(pipe_id)
 		if pipeline is None:
 			return fmk_rest_error("Unknow pipeline id " + str(pipe_id))
 		conf = pipeline.get_config()
@@ -245,8 +250,8 @@ class RunHandler:
 			cw = execute_plugin.delay(pipeline.path, config)
 		except:
 			# TODO : clean filesystem
-			return fmk_rest_error("Enable to run the pipeline with celery " + str(pipe_id))
-		# 4- Keep celery task procy in memory, and store run information into database
+			return fmk_rest_error("Unable to run the pipeline with celery " + str(pipe_id))
+		# 4- Store run information into database
 		run = Run()
 		run.import_data({
 			"pipe_id" : pipe_id,
@@ -258,7 +263,6 @@ class RunHandler:
 			"prog_val" : "0"
 		})
 		run.save()
-		rp[str(cw.id)] = (run, cw)
 		# 5- return result
 		return fmk_rest_success(run.export_data())
 
@@ -269,42 +273,58 @@ class RunHandler:
 
 	def get_status(self, request):
 		run_id = request.match_info.get('run_id', -1)
-		print ("GET run/<id=" + str(run_id) + ">/status")
-		return web.Response(body=b"GET run/<id>/status")
+		run = Run.from_id(run_id)
+		if run == None:
+			return fmk_rest_error("Unable to find the run with id " + str(run_id))
+		return fmk_rest_success(run.export_data())
+
+
+	def download_file(self, run_id, filename):
+		if run_id == -1:
+			return fmk_rest_error("Id not found")
+		run = Run.from_id(run_id)
+		if run == None:
+			return fmk_rest_error("Unable to find the run with id " + str(run_id))
+		path = os.path.join(RUN_DIR, run.celery_id, filename)
+
+		if not os.path.exists(path):
+			return fmk_rest_error("File not found. " + filename + " doesn't exists for the run " + str(run_id))
+		content = ""
+		with open(path, 'r') as content_file:
+			content = content_file.read()
+		return web.Response(
+			headers=MultiDict({'Content-Disposition': 'Attachment'}),
+			body=str.encode(content)
+		)
 
 	def get_log(self, request):
 		run_id = request.match_info.get('run_id', -1)
-		print ("GET run/<id=" + str(run_id) + ">/log")
-		return web.Response(body=b"GET run/<id>/log")
+		return self.download_file(run_id, "out.log")
 
 	def get_err(self, request):
 		run_id = request.match_info.get('run_id', -1)
-		print ("GET run/<id=" + str(run_id) + ">/err")
-		return web.Response(body=b"GET run/<id>/err")
+		return self.download_file(run_id, "err.log")
 
 
 	def get_files(self, request):
 		run_id  = request.match_info.get('run_id',  -1)
 		file_id = request.match_info.get('file_id', -1)
+		return self.download_file(run_id, "io.json")
 
 	def get_file(self, request):
 		run_id  = request.match_info.get('run_id',  -1)
-		file_id = request.match_info.get('file_id', -1)
+		filename = request.match_info.get('filename', "")
+		return self.download_file(run_id, filename)
 
 	def up_progress(self, request):
 		run_id = request.match_info.get('run_id', -1)
 		complete = request.match_info.get('complete', None)
 		print("RunHandler[up_progress] : taskid=" + run_id, complete)
-		if run_id in rp:
-			run = rp[run_id][0]
+		run = Run.from_celery_id(run_id)
+		if run is not None:
 			run.prog_val = complete
 			run.save()
-		# Todo else retrieve run from db and update if exists, else ignore
-		data = []
-		for run in rp.values():
-			data.append(run[0].export_data())
-		print( json.dumps(data))
-		msg = '{"action":"run_progress", "data" : ' + json.dumps(data) + '}'
+		msg = '{"action":"run_progress", "data" : ' + json.dumps(fmk_last_runs()) + '}'
 		fmk_notify_all(None, msg)
 		return web.Response()
 
@@ -312,16 +332,11 @@ class RunHandler:
 		run_id = request.match_info.get('run_id', -1)
 		status = request.match_info.get('status', None)
 		print("RunHandler[up_status] : taskid=" + run_id , status)
-		if run_id in rp:
-			run = rp[run_id][0]
+		run = Run.from_celery_id(run_id)
+		if run is not None:
 			run.status = status
 			run.save()
-		# Todo else retrieve run from db and update if exists, else ignore
-		# Todo manage when status is done, error or failed, to clean server memory by removing celery token
-		data = []
-		for run in rp.values():
-			data.append(run[0].export_data())
-		msg = '{"action":"run_progress", "data" : ' + json.dumps(data) + '}'
+		msg = '{"action":"run_progress", "data" : ' + json.dumps(fmk_last_runs()) + '}'
 		fmk_notify_all(None, msg)
 		return web.Response()
 
@@ -417,7 +432,7 @@ app.router.add_route('GET',    '/run/{run_id}/status', runHdl.get_status)
 app.router.add_route('GET',    '/run/{run_id}/log', runHdl.get_log)
 app.router.add_route('GET',    '/run/{run_id}/err', runHdl.get_err)
 app.router.add_route('GET',    '/run/{run_id}/files', runHdl.get_files)
-app.router.add_route('GET',    '/run/{run_id}/file/{file_id}', runHdl.get_file)
+app.router.add_route('GET',    '/run/{run_id}/file/{filename}', runHdl.get_file)
 
 app.router.add_route('GET',    '/run/notify/{run_id}/{complete}', runHdl.up_progress)
 app.router.add_route('GET',    '/run/notify/{run_id}/status/{status}', runHdl.up_status)

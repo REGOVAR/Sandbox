@@ -67,7 +67,7 @@ class Pipeline(Document):
 			"developer" : self.developer,
 			"input_allowed" : self.input_allowed,
 			"path": self.path, 
-			"id": str(self.pk)
+			"id": str(self.id)
 		}
 
 	def import_data(self, data):
@@ -122,22 +122,23 @@ class Run(Document):
 	start     = StringField(required=True)
 	end       = StringField()
 	status    = StringField()
-	inputLst  = StringField()
-	outputLst = StringField()
+	inputs    = StringField()
+	outputs   = StringField()
 	prog_val  = StringField(required=True)
 	prog_info = StringField()
 
 	def export_data(self):
 		return {
-			"pipe_id" : self.pipe_id,
+			"id" : str(self.id),
+			"pipe_id" : str(self.pipe_id),
 			"pipe_name" : self.pipe_name,
 			"celery_id" : self.celery_id,
-			"user_id": self.user_id, 
+			"user_id": str(self.user_id), 
 			"start": self.start,
 			"end": self.end,
 			"status": self.status,
-			"inputLst"  : self.inputLst,
-			"outputLst" : self.outputLst,
+			"inputs"  : self.inputs,
+			"outputs" : self.outputs,
 			"prog_val" : self.prog_val,
 			"prog_info" : self.prog_info
 		}
@@ -153,14 +154,12 @@ class Run(Document):
 			self.prog_val  = data['prog_val']
 			if "end" in data:
 				self.end = data['end']
-			if "inputLst" in data:
-				self.inputLst = data["inputLst"]
-			if "outputLst" in data:
-				self.outputLst = data["outputLst"]
+			if "inputs" in data:
+				self.inputs = data["inputs"]
+			if "outputs" in data:
+				self.outputs = data["outputs"]
 			if "prog_info" in data:
 				self.prog_info = data["prog_info"]
-
-
 		except KeyError as e:
 			raise ValidationError('Invalid plugin: missing ' + e.args[0])
 		return self 
@@ -170,5 +169,10 @@ class Run(Document):
 		if not ObjectId.is_valid(run_id):
 			return None;
 		run = Run.objects.get(pk=run_id)
+		return run
+
+	@staticmethod
+	def from_celery_id(run_id):
+		run = Run.objects.get(celery_id=run_id)
 		return run
 

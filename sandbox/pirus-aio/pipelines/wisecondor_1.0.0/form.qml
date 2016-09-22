@@ -1,7 +1,0 @@
- Rectangle
- {
- 	Text
- 	{
- 		Salut
- 	}
- }
