@@ -51,10 +51,10 @@ class PirusTask(Task):
         print('  Context : Executing task id {0.id}, args: {0.args!r} kwargs: {0.kwargs!r}'.format(self.request))
 
 
-    def notify_progress(self, task_name:str, completion:float, status:str=None, msg:str=None):
+    def notify_progress(self, completion:float, infos:str=None):
         data = { 
             "progress" : str(completion),
-            "info" : task_name
+            "info" : infos
         }
         requests.get(self.notify_url + "/" + str(completion))
         print ("send notify progress : ", self.notify_url)
@@ -110,8 +110,8 @@ def execute_plugin(self, fullpath, config):
         self.log_msg("Pipeline run ! GO.")
         self.dump_context()
         pluginInstance.run(config)
-    except:
-        self.log_err("Failed to create pipeline running environment.")
+    except Exception as error:
+        self.log_err("The execution of the pipeline stopped and raised the following exception.\n" + repr(error))
         self.notify_status("ERROR")
         return 3
     # 4- Done
