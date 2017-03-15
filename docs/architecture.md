@@ -5,12 +5,12 @@ https://coggle.it/diagram/Vv7ygtaFfxlmVQIE
 * REST API
  * To interact between server and client(s)
  * Standard, simple
-* Flask
+* aioHTTP
  * To expose webservice via a REST API
- * Simple, flexible
+ * Simple, flexible, realtime with websockets
 * Marshmallow
  * To serialise and deserialise formats
-* Database: MySQL? PostgeSQL? SQLAlchemy Python?
+* Database: PostgeSQL + SQLAlchemy Python
  * To store and to query
  * Get the VAT/Gemini code?
 
