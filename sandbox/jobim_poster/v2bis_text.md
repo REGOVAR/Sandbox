@@ -47,10 +47,23 @@ Girci Grand-Ouest
 
 
 Workflow
-...
+- Project
+- Local Database
+- Custom Filters
+- Custom Pipeline
+- Tiers CHU
 
-
-
+- Sequencing data
+- Create project Add attachments
+- Selection of variants and transcripts
+- Apply / Edit / Save yours Filters
+- Analyse your data with your pipelines
+- Results and generated reports available in the project
+- Import variants and annotation into the database
+- Install yours pipelines
+- Share, install, test tiers pipelines
+- Share statistics about variants and annotations
+- Share filters and panel with others
 
 
 Join us, create your tool !
