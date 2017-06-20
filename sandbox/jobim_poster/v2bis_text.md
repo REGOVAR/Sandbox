@@ -17,6 +17,7 @@ Objectives
 Bioinformaticians
 - I want to do all I want
 - I want to use all software I want
+- I would like to spend more time developing my pipelines than running them for the others
 - No time to spend on a enduser's graphical interface
 
 Geneticists
@@ -24,35 +25,29 @@ Geneticists
 - I just want to click a button to get my results
 - I'm interruptable, I do many things at the same time
 - I don't want to be stuck when waiting my results
+- I need a clear report for acreditation
 
 CHU/IT Department
 - No way they install anything on the server
 - No time to struggle with theirs weirds dependancies
 - Deployement shall be easy
+- Access must be sucured
 - No money
 
 Regovar
 - Open-source and Free
-- Able to run all pipeline 
+- Hospitals of HUGO in the project, open to everyone (Nancy Hospital join us in june)
+- Able to run all pipelines 
 - All data stored on local securized server
 - Allow and simplify the sharing of pipelines, panels, filters and statistics
-- Hospitals of HUGO in the project, open to everyone (Nancy Hospital join us in june)
-- 
 
 Girci Grand-Ouest
 - PHRCI project 2016-2018
-- 156 k€ 
-- 
+- 156 000 € 
 
 
 Workflow
-Hospital
-
-Create project / Add data
-
-Analyse your data with custom pipeline
-
-Result and generated report available 
+...
 
 
 
