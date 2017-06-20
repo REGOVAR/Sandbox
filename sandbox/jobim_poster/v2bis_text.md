@@ -15,28 +15,28 @@ Dominique BONNEAU1
 Objectives
 
 Bioinformaticians
-- I want to do all I want
-- I want to use all software I want
+- I want to do all what I want
+- I want to use the software I want
 - I would like to spend more time developing my pipelines than running them for the others
-- No time to spend on a enduser's graphical interface
+- No time to spend on a enduser graphical interface
 
 Geneticists
 - I don't want to see any command line
-- I just want to click a button to get my results
+- I just want to click on a button to get my results
 - I'm interruptable, I do many things at the same time
-- I don't want to be stuck when waiting my results
-- I need a clear report for acreditation
+- I don't want to be stuck when waiting for my results
+- I need a clear report for accreditation
 
 CHU/IT Department
-- No way they install anything on the server
-- No time to struggle with theirs weirds dependancies
-- Deployement shall be easy
-- Access must be sucured
+- No way they install something on the server
+- No time to struggle with their weird dependancies
+- Deployment shall be easy
+- Access must be secured
 - No money
 
 Regovar
 - Open-source and Free
-- Hospitals of HUGO in the project, open to everyone (Nancy Hospital join us in june)
+- Hospitals of HUGO in the project, open to everyone (Nancy Hospital joined us in June)
 - Able to run all pipelines 
 - All data stored on local securized server
 - Allow and simplify the sharing of pipelines, panels, filters and statistics
