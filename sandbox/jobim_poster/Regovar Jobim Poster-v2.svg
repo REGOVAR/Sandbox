@@ -19,9 +19,9 @@
    inkscape:version="0.91 r13725"
    sodipodi:docname="Regovar Jobim Poster-v2.svg"
    enable-background="new"
-   inkscape:export-filename="E:\Git\Sandbox\sandbox\jobim_poster\Regovar Jobim Poster-v2bis.png"
-   inkscape:export-xdpi="48"
-   inkscape:export-ydpi="48">
+   inkscape:export-filename="/home/olivier/git/Sandbox/sandbox/jobim_poster/Regovar Jobim Poster-v2.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs2">
     <marker
@@ -1433,6 +1433,27 @@
        x2="551.45374"
        y2="415.33496"
        gradientUnits="userSpaceOnUse" />
+    <mask
+       maskUnits="userSpaceOnUse"
+       id="mask8227-7">
+      <rect
+         y="-928.93213"
+         x="-2.5747538"
+         height="178.14285"
+         width="850.16144"
+         id="rect8229-5"
+         style="display:inline;opacity:1;fill:url(#linearGradient8207);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </mask>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4557"
+       id="linearGradient5964"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.3547335,0,0,1.3547335,358.05595,-796.1352)"
+       x1="-153.94725"
+       y1="-21.585278"
+       x2="221.83371"
+       y2="-38.690525" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -1441,9 +1462,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.23144532"
-     inkscape:cx="2049.019"
-     inkscape:cy="2350.1584"
+     inkscape:zoom="0.21426774"
+     inkscape:cx="939.70713"
+     inkscape:cy="1546.6874"
      inkscape:document-units="mm"
      inkscape:current-layer="layer14"
      showgrid="true"
@@ -5167,6 +5188,15 @@
          x="188.0303"
          y="-97.515213"
          style="stroke-width:0.26458332" /></text>
+    <rect
+       transform="translate(3.1273329,1266.5529)"
+       y="-928.93213"
+       x="-2.5746927"
+       height="178.14285"
+       width="850.16138"
+       id="rect4551-6"
+       style="display:inline;opacity:1;fill:url(#linearGradient5964);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       mask="url(#mask8227-7)" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -5376,7 +5406,7 @@
     <text
        sodipodi:linespacing="0%"
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:1;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:1;fill:#3465a4;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
        x="11.520782"
        y="1139.6746"
        id="text5184-8"><tspan
@@ -5384,7 +5414,7 @@
          id="tspan5182-4"
          x="11.520782"
          y="1139.6746"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.7555542px;line-height:1;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#204a87;stroke-width:0.26458332">Join us, create your tool !</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.7555542px;line-height:1;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#3465a4;stroke-width:0.26458332;">Join us, create your tool !</tspan></text>
     <text
        sodipodi:linespacing="0%"
        xml:space="preserve"
@@ -5399,7 +5429,7 @@
          style="font-size:6.3499999px;line-height:1.25"> </tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;display:inline;opacity:1;fill:#555753;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;display:inline;opacity:1;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
        x="754.22784"
        y="1121.97"
        id="text5170-5-9-4"
@@ -5407,27 +5437,27 @@
          sodipodi:role="line"
          x="758.72028"
          y="1121.97"
-         style="font-size:14.11111259px;line-height:1;text-align:end;text-anchor:end;fill:#555753;fill-opacity:1;stroke-width:0.26458332"
+         style="font-size:14.11111259px;line-height:1;text-align:end;text-anchor:end;fill:#204a87;fill-opacity:1;stroke-width:0.26458332;"
          id="tspan6083-4">Official website </tspan><tspan
          sodipodi:role="line"
          x="758.72028"
          y="1136.0811"
-         style="font-size:14.11111259px;line-height:1;text-align:end;text-anchor:end;fill:#555753;fill-opacity:1;stroke-width:0.26458332"
+         style="font-size:14.11111259px;line-height:1;text-align:end;text-anchor:end;fill:#204a87;fill-opacity:1;stroke-width:0.26458332;"
          id="tspan6337">Source code </tspan><tspan
          sodipodi:role="line"
          x="758.72028"
          y="1150.1921"
-         style="font-size:14.11111259px;line-height:1;text-align:end;text-anchor:end;fill:#555753;fill-opacity:1;stroke-width:0.26458332"
+         style="font-size:14.11111259px;line-height:1;text-align:end;text-anchor:end;fill:#204a87;fill-opacity:1;stroke-width:0.26458332;"
          id="tspan6343">Documentation </tspan><tspan
          sodipodi:role="line"
          x="758.72028"
          y="1164.3033"
-         style="font-size:14.11111259px;line-height:1;text-align:end;text-anchor:end;fill:#555753;fill-opacity:1;stroke-width:0.26458332"
+         style="font-size:14.11111259px;line-height:1;text-align:end;text-anchor:end;fill:#204a87;fill-opacity:1;stroke-width:0.26458332;"
          id="tspan6345">Chat </tspan><tspan
          sodipodi:role="line"
          x="758.72028"
          y="1178.4144"
-         style="font-size:14.11111259px;line-height:1;text-align:end;text-anchor:end;fill:#555753;fill-opacity:1;stroke-width:0.26458332"
+         style="font-size:14.11111259px;line-height:1;text-align:end;text-anchor:end;fill:#204a87;fill-opacity:1;stroke-width:0.26458332;"
          id="tspan6341">Contacts </tspan></text>
     <text
        xml:space="preserve"
@@ -5468,37 +5498,34 @@
        height="126.65899"
        x="8.4439325"
        y="288.37427" />
-    <g
-       id="g6252">
-      <rect
-         transform="scale(-1,1)"
-         y="415.00323"
-         x="-830.50427"
-         height="133.80386"
-         width="237.27548"
-         id="rect5834-95"
-         style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      <path
-         transform="matrix(-0.33442769,0,0,-0.18213672,698.21488,467.34991)"
-         inkscape:transform-center-x="2.2822787"
-         d="m 353.83539,204.27794 -40.94669,23.64058 0,-47.28116 z"
-         inkscape:randomized="0"
-         inkscape:rounded="0"
-         inkscape:flatsided="true"
-         sodipodi:arg2="1.0471976"
-         sodipodi:arg1="0"
-         sodipodi:r2="13.648895"
-         sodipodi:r1="27.297791"
-         sodipodi:cy="204.27794"
-         sodipodi:cx="326.5376"
-         sodipodi:sides="3"
-         id="path5844-9-6-2-3-1"
-         style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         sodipodi:type="star" />
-    </g>
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5834-95"
+       width="243.20265"
+       height="115.51301"
+       x="-834.7381"
+       y="415.00323"
+       transform="scale(-1,1)" />
+    <path
+       sodipodi:type="star"
+       style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path5844-9-6-2-3-1"
+       sodipodi:sides="3"
+       sodipodi:cx="326.5376"
+       sodipodi:cy="204.27794"
+       sodipodi:r1="27.297791"
+       sodipodi:r2="13.648895"
+       sodipodi:arg1="0"
+       sodipodi:arg2="1.0471976"
+       inkscape:flatsided="true"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 353.83539,204.27794 -40.94669,23.64058 0,-47.28116 z"
+       inkscape:transform-center-x="2.2822787"
+       transform="matrix(-0.33442769,0,0,-0.18213672,696.52156,467.34991)" />
     <g
        id="g7303"
-       transform="translate(17.912287,0)"
+       transform="translate(16.218955,0)"
        style="fill:#204a87">
       <text
          id="text5184-0-8-6"
@@ -5717,30 +5744,30 @@
        y="240.14514"
        id="text6837"><tspan
          sodipodi:role="line"
-         id="tspan6835"
          x="53.502007"
          y="240.14514"
-         style="fill:#204a87;stroke-width:0.26458332">- I want to do all I want</tspan><tspan
+         style="fill:#204a87;stroke-width:0.26458332"
+         id="tspan6843">- I want to do all what I want</tspan><tspan
          sodipodi:role="line"
          x="53.502007"
          y="250.02292"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6839">- I want to use all software I want</tspan><tspan
+         id="tspan5980">- I want to use the software I want</tspan><tspan
          sodipodi:role="line"
          x="53.502007"
          y="259.9007"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6331">- I would like to spend more time developing my pipelines</tspan><tspan
+         id="tspan5982">- I would like to spend more time to develope my </tspan><tspan
          sodipodi:role="line"
          x="53.502007"
          y="269.77847"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6352">  than running them for the others</tspan><tspan
+         id="tspan5986">  pipelines than running them for the others</tspan><tspan
          sodipodi:role="line"
          x="53.502007"
          y="279.65625"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6843">- No time to spend on a enduser's graphical interface</tspan></text>
+         id="tspan5984">- No time to spend on an enduser graphical interface</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:9.8777771px;line-height:1;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -5751,42 +5778,42 @@
          x="631.52545"
          y="258.8681"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6957">- I don't want to see any command line</tspan><tspan
+         id="tspan6354">- I don't want to see any command line</tspan><tspan
          sodipodi:role="line"
          x="631.52545"
          y="268.74588"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6961">- I just want to click a button to get my </tspan><tspan
+         id="tspan6027">- I just want to click on a button to get </tspan><tspan
          sodipodi:role="line"
          x="631.52545"
          y="278.62366"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6142">  results</tspan><tspan
+         id="tspan6035">  my results</tspan><tspan
          sodipodi:role="line"
          x="631.52545"
          y="288.50143"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6965">- I'm interruptable, I do many things at</tspan><tspan
+         id="tspan6029">- I'm interruptable, I do many things at </tspan><tspan
          sodipodi:role="line"
          x="631.52545"
          y="298.37921"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6146">  the same time</tspan><tspan
+         id="tspan6037">  the same time</tspan><tspan
          sodipodi:role="line"
          x="631.52545"
          y="308.25699"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6969">- I don't want to be stuck when waiting</tspan><tspan
+         id="tspan6031">- I don't want to be stuck when waiting </tspan><tspan
          sodipodi:role="line"
          x="631.52545"
          y="318.13477"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6150">  my results</tspan><tspan
+         id="tspan6039">  for my results</tspan><tspan
          sodipodi:role="line"
          x="631.52545"
          y="328.01254"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6354">- I need a clear report for acreditation</tspan></text>
+         id="tspan6033">- I need a clear report for accreditation</tspan></text>
     <g
        id="g5903"
        transform="matrix(1,0,0,1.0912934,-55.035144,-12.070323)">
@@ -5855,41 +5882,41 @@
        x="22.854527"
        y="347.17154"
        id="text6856"><tspan
+         id="tspan6333"
          sodipodi:role="line"
-         id="tspan6854"
          x="22.854527"
          y="347.17154"
-         style="font-size:9.87777805px;fill:#204a87;stroke-width:0.26458332">- No way they install anything </tspan><tspan
+         style="font-size:9.87777805px;fill:#204a87;stroke-width:0.26458332">- No way they install something </tspan><tspan
          sodipodi:role="line"
          x="22.854527"
          y="357.04932"
          style="font-size:9.87777805px;fill:#204a87;stroke-width:0.26458332"
-         id="tspan7034">  on the server</tspan><tspan
+         id="tspan6079">  on the server</tspan><tspan
          sodipodi:role="line"
          x="22.854527"
          y="366.92709"
          style="font-size:9.87777805px;fill:#204a87;stroke-width:0.26458332"
-         id="tspan6858">- No time to struggle with theirs </tspan><tspan
+         id="tspan6070">- No time to struggle with their </tspan><tspan
          sodipodi:role="line"
          x="22.854527"
          y="376.80487"
          style="font-size:9.87777805px;fill:#204a87;stroke-width:0.26458332"
-         id="tspan7036">  weirds dependancies</tspan><tspan
+         id="tspan6081">  weird dependancies</tspan><tspan
          sodipodi:role="line"
          x="22.854527"
          y="386.68265"
          style="font-size:9.87777805px;fill:#204a87;stroke-width:0.26458332"
-         id="tspan6860">- Deployement shall be easy</tspan><tspan
+         id="tspan6072">- Deployment shall be easy</tspan><tspan
          sodipodi:role="line"
          x="22.854527"
          y="396.56042"
          style="font-size:9.87777805px;fill:#204a87;stroke-width:0.26458332"
-         id="tspan6862">- Access must be sucured</tspan><tspan
-         id="tspan6333"
+         id="tspan6074">- Access must be secured</tspan><tspan
          sodipodi:role="line"
          x="22.854527"
          y="406.4382"
-         style="font-size:9.87777805px;fill:#204a87;stroke-width:0.26458332">- No money</tspan></text>
+         style="font-size:9.87777805px;fill:#204a87;stroke-width:0.26458332"
+         id="tspan6076">- No money</tspan></text>
     <image
        y="443.26169"
        x="26.561966"
@@ -7142,49 +7169,44 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:9.8777771px;line-height:1;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="608.55847"
+       x="606.86511"
        y="456.89267"
        id="text7536"><tspan
          sodipodi:role="line"
-         x="608.55847"
+         x="606.86511"
          y="456.89267"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6327">- Open-source and Free</tspan><tspan
+         id="tspan6164">- Open-source and Free</tspan><tspan
          sodipodi:role="line"
-         x="608.55847"
+         x="606.86511"
          y="466.77045"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6364">- Hospitals of HUGO in the project, open to</tspan><tspan
+         id="tspan6118">- Hospitals of HUGO in the project, open to </tspan><tspan
          sodipodi:role="line"
-         x="608.55847"
+         x="606.86511"
          y="476.64822"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6366">  everyone (Nancy Hospital join us in june)</tspan><tspan
+         id="tspan6126">  everyone (Nancy Hospital joined us in June)</tspan><tspan
          sodipodi:role="line"
-         x="608.55847"
+         x="606.86511"
          y="486.526"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan7538">- Able to run all pipelines </tspan><tspan
+         id="tspan6120">- Able to run all pipelines</tspan><tspan
          sodipodi:role="line"
-         x="608.55847"
+         x="606.86511"
          y="496.40378"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan7540">- All data stored on local securized server</tspan><tspan
+         id="tspan6122">- All data stored on local securized server</tspan><tspan
          sodipodi:role="line"
-         x="608.55847"
+         x="606.86511"
          y="506.28156"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6154">- Allow and simplify the sharing of pipelines,</tspan><tspan
+         id="tspan6124">- Allow and simplify the sharing of pipelines, </tspan><tspan
          sodipodi:role="line"
-         x="608.55847"
+         x="606.86511"
          y="516.1593"
          style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6162">  panels, filters and statistics</tspan><tspan
-         sodipodi:role="line"
-         x="608.55847"
-         y="526.03711"
-         style="fill:#204a87;stroke-width:0.26458332"
-         id="tspan6164">- </tspan></text>
+         id="tspan6128">  panels, filters and statistics</tspan></text>
     <g
        style="display:inline;opacity:0.3;fill:#204a87"
        id="g7743-2"
