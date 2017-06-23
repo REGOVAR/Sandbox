@@ -15,47 +15,55 @@ Dominique BONNEAU1
 Objectives
 
 Bioinformaticians
-- I want to do all I want
-- I want to use all software I want
-- No time to spend on a enduser's graphical interface
+- I want to do all what I want
+- I want to use the software I want
+- I would like to spend more time developing my pipelines than running them for the others
+- No time to spend on a enduser graphical interface
 
 Geneticists
 - I don't want to see any command line
-- I just want to click a button to get my results
+- I just want to click on a button to get my results
 - I'm interruptable, I do many things at the same time
-- I don't want to be stuck when waiting my results
+- I don't want to be stuck when waiting for my results
+- I need a clear report for accreditation
 
 CHU/IT Department
-- No way they install anything on the server
-- No time to struggle with theirs weirds dependancies
-- Deployement shall be easy
+- No way they install something on the server
+- No time to struggle with their weird dependancies
+- Deployment shall be easy
+- Access must be secured
 - No money
 
 Regovar
 - Open-source and Free
-- Able to run all pipeline 
+- Hospitals of HUGO in the project, open to everyone (Nancy Hospital joined us in June)
+- Able to run all pipelines 
 - All data stored on local securized server
 - Allow and simplify the sharing of pipelines, panels, filters and statistics
-- Hospitals of HUGO in the project, open to everyone (Nancy Hospital join us in june)
-- 
 
 Girci Grand-Ouest
 - PHRCI project 2016-2018
-- 156 k€ 
-- 
+- 156 000 € 
 
 
 Workflow
-Hospital
+- Project
+- Local Database
+- Custom Filters
+- Custom Pipeline
+- Tiers CHU
 
-Create project / Add data
-
-Analyse your data with custom pipeline
-
-Result and generated report available 
-
-
-
+- Sequencing data
+- Create project Add attachments
+- Selection of variants and transcripts
+- Apply / Edit / Save yours Filters
+- Analyse your data with your pipelines
+- Results and generated reports available in the project
+- Import variants and annotation into the database
+- Install yours pipelines
+- Share, install, test tiers pipelines
+- Share statistics about variants and annotations
+- Share filters and panel with others
 
 
 Join us, create your tool !
