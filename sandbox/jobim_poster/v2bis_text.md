@@ -1,6 +1,6 @@
 Regovar
 
-Free and open-source NGS analysis !
+Free and open-source NGS analysis!
 
 Olivier GUEUDELOT1
 Anne-Sophie DENOMMÉ-PICHON2
@@ -27,7 +27,7 @@ Geneticists
 - I don't want to be stuck while waiting for my results
 - I need a clear report for accreditation
 
-CHU/IT Department
+Hospital/IT Department
 - Difficulty to install custom  applications on our servers
 - No time to struggle with their weird dependancies
 - Deployment shall be easy
@@ -35,22 +35,22 @@ CHU/IT Department
 - No money
 
 Regovar
-- Open-source and Free
-- HUGO's Hospitals, but also open to  everyone (Nancy Hospital joined us in June)
+- Open source and free
+- 7 hospitals, but also open to everyone
 - Able to run all pipelines
 - All data stored on local securized server
 - Allow and simplify the sharing of pipelines, panels, filters and statistics
+- For diagnosis and research
 
-Girci Grand-Ouest
-- PHRCI project 2016-2018
-- 156 000 € 
-
+GIRCI Grand-Ouest
+- Hospital Inter-Regional Clinical Research Project (PHRCI) 2016-2018
+- 156 000 €
 
 Workflow
 - Project
-- Local Database
-- Custom Filters
-- Custom Pipeline
+- Local database
+- Custom filters
+- Custom pipeline
 - Tiers CHU
 
 - Sequencing data
@@ -66,7 +66,7 @@ Workflow
 - Share filters and panel with others
 
 
-Join us, create your tool !
+Join us, create your tool!
 http://regovar.org
 dev@regovar.org
 
@@ -74,5 +74,4 @@ Official website
 Source code 
 Documentation 
 Chat 
-Contacts 
-
+Contacts
