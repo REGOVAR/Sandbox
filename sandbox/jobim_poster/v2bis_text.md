@@ -17,29 +17,29 @@ Objectives
 Bioinformaticians
 - I want to be free to do what I want
 - I want to use the software I want
-- I want to spend more time developping my pipelines rather than running them for others
-- No time to spend on an enduser graphical interface
+- I want to spend more time developing my pipelines rather than running them for others
+- I don't have time to spend on an enduser graphical interface
 
 Geneticists
 - I don't want to see any command line
 - I just want to click on a button to get my results
-- I'm interruptable, I do many things at the same time
+- I'm interruptible, I do many things at the same time
 - I don't want to be stuck while waiting for my results
 - I need a clear report for accreditation
 
 Hospital/IT Department
-- Difficulty to install custom  applications on our servers
-- No time to struggle with their weird dependancies
-- Deployment shall be easy
-- Access must be secured
-- No money
+- It's difficult to install custom applications on our servers
+- I don't have time to struggle with their weird dependencies
+- Deployment should be easy
+- Access must be secure
+- I don't have money to spare
 
 Regovar
 - Open source and free
 - 7 hospitals, but also open to everyone
 - Able to run all pipelines
-- All data stored on local securized server
-- Allow and simplify the sharing of pipelines, panels, filters and statistics
+- All data stored on secure local servers
+- Allows and simplifies the sharing of pipelines, panels, filters and statistics
 - For diagnosis and research
 
 GIRCI Grand-Ouest
@@ -51,17 +51,17 @@ Workflow
 - Local database
 - Custom filters
 - Custom pipeline
-- Tiers CHU
+- Other hospitals
 
 - Sequencing data
 - Create project Add attachments
-- Selection of variants and transcripts
-- Apply / Edit / Save yours Filters
-- Analyse your data with your pipelines
-- Results and generated reports available in the project
-- Import variants and annotation into the database
-- Install yours pipelines
-- Share, install, test tiers pipelines
+- Select variants and transcripts
+- Apply, edit, save your filters
+- Analyze your data with your pipelines
+- Save your results and generate reports available in the project
+- Import variants and annotations into the database
+- Install your pipelines
+- Share, install, test external pipelines
 - Share statistics about variants and annotations
 - Share filters and panel with others
 
