@@ -1693,11 +1693,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.78374771"
-     inkscape:cx="1626.3696"
-     inkscape:cy="1094.9753"
+     inkscape:zoom="0.19593693"
+     inkscape:cx="1679.828"
+     inkscape:cy="1506.655"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer17"
+     inkscape:current-layer="layer6"
      showgrid="true"
      inkscape:snap-page="true"
      showguides="true"
@@ -4441,8 +4441,7 @@
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="Background"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <rect
        style="opacity:1;fill:#abccf0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3.54330707;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect5404"
@@ -4486,7 +4485,7 @@
          y="686.09857"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:35.27777863px;line-height:1.25;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';fill:#ffffff">Workflow</tspan></text>
     <rect
-       style="display:inline;opacity:0.27999998;fill:#00d3c4;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="display:inline;opacity:0.1;fill:#00d3c4;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect15449"
        width="866.55048"
        height="109.12716"
