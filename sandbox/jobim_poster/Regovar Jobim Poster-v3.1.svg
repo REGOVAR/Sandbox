@@ -16,10 +16,10 @@
    viewBox="0 0 841 1189"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.1 r15371"
+   inkscape:version="0.91 r13725"
    sodipodi:docname="Regovar Jobim Poster-v3.1.svg"
    enable-background="new"
-   inkscape:export-filename="E:\Git\Sandbox\sandbox\jobim_poster\Regovar Jobim Poster-v3.1.png"
+   inkscape:export-filename="/home/olivier/git/Sandbox/sandbox/jobim_poster/Regovar Jobim Poster-v3.1.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -1708,11 +1708,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.27709666"
-     inkscape:cx="1679.0319"
-     inkscape:cy="1403.7745"
+     inkscape:zoom="0.36278947"
+     inkscape:cx="1694.0403"
+     inkscape:cy="1864.5735"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer14"
+     inkscape:current-layer="layer17"
      showgrid="true"
      inkscape:snap-page="true"
      showguides="true"
@@ -1723,11 +1723,11 @@
      borderlayer="true"
      inkscape:showpageshadow="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:window-height="1135"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:snap-global="true"
+     inkscape:snap-global="false"
      inkscape:snap-bbox="true"
      inkscape:bbox-nodes="true"
      inkscape:bbox-paths="true"
@@ -1837,7 +1837,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -6020,104 +6020,107 @@
          y="328.01254"
          style="font-size:9.8777771px;line-height:1;fill:#204a87;stroke-width:0.26458332"
          id="tspan6205">- I need a clear report for accreditation</tspan></text>
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5834"
+       width="198.92801"
+       height="102.03356"
+       x="7.0827732"
+       y="316.00494" />
+    <path
+       sodipodi:type="star"
+       style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path5844-9-6"
+       sodipodi:sides="3"
+       sodipodi:cx="326.5376"
+       sodipodi:cy="204.27794"
+       sodipodi:r1="27.297791"
+       sodipodi:r2="13.648895"
+       sodipodi:arg1="0"
+       sodipodi:arg2="1.0471976"
+       inkscape:flatsided="true"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 353.83539,204.27794 -40.94669,23.64058 0,-47.28116 z"
+       inkscape:transform-center-x="-2.2822788"
+       transform="matrix(0.33442769,0,0,0.1987646,101.08009,282.98808)" />
     <g
-       id="g5903"
-       transform="matrix(1,0,0,1.0912934,-55.035144,-10.482822)">
-      <rect
-         y="299.17505"
-         x="67.174416"
-         height="93.497826"
-         width="181.21979"
-         id="rect5834"
-         style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      <path
-         transform="matrix(0.33442769,0,0,0.18213672,143.3496,268.92026)"
-         inkscape:transform-center-x="-2.2822788"
-         d="M 353.83539,204.27794 312.8887,227.91852 V 180.63736 Z"
-         inkscape:randomized="0"
-         inkscape:rounded="0"
-         inkscape:flatsided="true"
-         sodipodi:arg2="1.0471976"
-         sodipodi:arg1="0"
-         sodipodi:r2="13.648895"
-         sodipodi:r1="27.297791"
-         sodipodi:cy="204.27794"
-         sodipodi:cx="326.5376"
-         sodipodi:sides="3"
-         id="path5844-9-6"
-         style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         sodipodi:type="star" />
-    </g>
-    <g
-       id="g7277"
-       style="fill:#204a87"
-       transform="translate(0.344924,16.829883)">
+       id="g5997"
+       transform="translate(-5.0799997,0)">
       <g
+         transform="translate(0.344924,16.829883)"
          style="fill:#204a87"
-         transform="matrix(0.71001054,0,0,0.71001054,9.8841229,-245.22852)"
-         id="g5110">
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;opacity:0.5;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-           x="10.193509"
-           y="794.34363"
-           id="text5184-0-7"><tspan
-             sodipodi:role="line"
-             id="tspan5182-2-8"
-             x="10.193509"
+         id="g7277">
+        <g
+           id="g5110"
+           transform="matrix(0.71001054,0,0,0.71001054,9.8841229,-245.22852)"
+           style="fill:#204a87">
+          <text
+             sodipodi:linespacing="0%"
+             id="text5184-0-7"
              y="794.34363"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.7555542px;line-height:1;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#204a87;stroke-width:0.26458332">CHU/IT Department</tspan></text>
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-           x="10.193162"
-           y="793.28528"
-           id="text5184-2"><tspan
-             sodipodi:role="line"
-             id="tspan5182-5"
-             x="10.193162"
+             x="10.193509"
+             style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;opacity:0.5;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.7555542px;line-height:1;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#204a87;stroke-width:0.26458332"
+               y="794.34363"
+               x="10.193509"
+               id="tspan5182-2-8"
+               sodipodi:role="line">Hospital/IT Department</tspan></text>
+          <text
+             sodipodi:linespacing="0%"
+             id="text5184-2"
              y="793.28528"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.7555542px;line-height:1;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#204a87;stroke-width:0.26458332">CHU/IT Department</tspan></text>
+             x="10.193162"
+             style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.7555542px;line-height:1;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#204a87;stroke-width:0.26458332"
+               y="793.28528"
+               x="10.193162"
+               id="tspan5182-5"
+               sodipodi:role="line">Hospital/IT Department</tspan></text>
+        </g>
       </g>
     </g>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="22.854527"
+       x="19.467865"
        y="348.75906"
-       id="text6856"><tspan
+       id="text6856"
+       sodipodi:linespacing="0%"><tspan
          sodipodi:role="line"
-         x="22.854527"
+         x="19.467865"
          y="348.75906"
          style="font-size:9.87777805px;line-height:1;fill:#204a87;stroke-width:0.26458332"
          id="tspan6243">- It's difficult to install custom </tspan><tspan
          sodipodi:role="line"
-         x="22.854527"
+         x="19.467865"
          y="358.63684"
          style="font-size:9.87777805px;line-height:1;fill:#204a87;stroke-width:0.26458332"
          id="tspan6252">  applications on our servers</tspan><tspan
          sodipodi:role="line"
-         x="22.854527"
+         x="19.467865"
          y="368.51462"
          style="font-size:9.87777805px;line-height:1;fill:#204a87;stroke-width:0.26458332"
          id="tspan6244">- I don't have time to struggle </tspan><tspan
          sodipodi:role="line"
-         x="22.854527"
+         x="19.467865"
          y="378.3924"
          style="font-size:9.87777805px;line-height:1;fill:#204a87;stroke-width:0.26458332"
          id="tspan6254">  with their weird dependencies</tspan><tspan
          sodipodi:role="line"
-         x="22.854527"
+         x="19.467865"
          y="388.27017"
          style="font-size:9.87777805px;line-height:1;fill:#204a87;stroke-width:0.26458332"
          id="tspan6246">- Deployment should be easy</tspan><tspan
          sodipodi:role="line"
-         x="22.854527"
+         x="19.467865"
          y="398.14795"
          style="font-size:9.87777805px;line-height:1;fill:#204a87;stroke-width:0.26458332"
          id="tspan6248">- Access must be secure</tspan><tspan
          sodipodi:role="line"
-         x="22.854527"
+         x="19.467865"
          y="408.02573"
          style="font-size:9.87777805px;line-height:1;fill:#204a87;stroke-width:0.26458332"
          id="tspan6250">- I don't have money to spare</tspan></text>
@@ -7558,7 +7561,8 @@
          y="788.13525"
          x="169.1721"
          style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         xml:space="preserve"><tspan
+         xml:space="preserve"
+         sodipodi:linespacing="0%"><tspan
            id="tspan14284"
            style="font-size:7.76111078px;line-height:1;text-align:center;text-anchor:middle;fill:#204a87;stroke-width:0.26458332"
            y="788.13525"
@@ -7578,7 +7582,7 @@
            y="811.41858"
            x="170.40752"
            sodipodi:role="line"
-           id="tspan9439">attachments, </tspan></text>
+           id="tspan9439">attachments </tspan></text>
     </g>
     <path
        style="display:inline;fill:none;stroke:#204a87;stroke-width:0.99999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker11606-2-0)"
@@ -8181,52 +8185,53 @@
        style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        x="613.2627"
        y="456.89267"
-       id="text7536"><tspan
+       id="text7536"
+       sodipodi:linespacing="0%"><tspan
          sodipodi:role="line"
          x="613.2627"
          y="456.89267"
          style="font-size:9.8777771px;line-height:1;fill:#204a87;stroke-width:0.26458332"
-         id="tspan6294">- Open source and free</tspan><tspan
+         id="tspan6294">- User-friendly all-in-one software</tspan><tspan
          sodipodi:role="line"
          x="613.2627"
          y="466.77045"
          style="font-size:9.8777771px;line-height:1;fill:#204a87;stroke-width:0.26458332"
-         id="tspan6283">- 7 hospitals, but also open to everyone</tspan><tspan
+         id="tspan6013">- Client-server architecture</tspan><tspan
          sodipodi:role="line"
          x="613.2627"
          y="476.64822"
          style="font-size:9.8777771px;line-height:1;fill:#204a87;stroke-width:0.26458332"
-         id="tspan6285">- Able to run all pipelines</tspan><tspan
+         id="tspan6007">- Open source and free</tspan><tspan
          sodipodi:role="line"
          x="613.2627"
          y="486.526"
          style="font-size:9.8777771px;line-height:1;fill:#204a87;stroke-width:0.26458332"
-         id="tspan6287">- All data stored on secure local servers</tspan><tspan
+         id="tspan6283">- 7 hospitals, but also open to everyone</tspan><tspan
          sodipodi:role="line"
          x="613.2627"
          y="496.40378"
          style="font-size:9.8777771px;line-height:1;fill:#204a87;stroke-width:0.26458332"
-         id="tspan6289">- Allows and simplifies the sharing of </tspan><tspan
+         id="tspan6285">- Able to run all pipelines</tspan><tspan
          sodipodi:role="line"
          x="613.2627"
          y="506.28156"
          style="font-size:9.8777771px;line-height:1;fill:#204a87;stroke-width:0.26458332"
-         id="tspan6293">  pipelines, panels, filters and statistics</tspan><tspan
+         id="tspan6287">- All data stored on secure local servers</tspan><tspan
          sodipodi:role="line"
          x="613.2627"
          y="516.1593"
          style="font-size:9.8777771px;line-height:1;fill:#204a87;stroke-width:0.26458332"
-         id="tspan6291">- For diagnosis and research</tspan><tspan
+         id="tspan6289">- Allows and simplifies the sharing of </tspan><tspan
          sodipodi:role="line"
          x="613.2627"
          y="526.03711"
          style="font-size:9.8777771px;line-height:1;fill:#204a87;stroke-width:0.26458332"
-         id="tspan6830">- User-friendly all-in-one software with a </tspan><tspan
+         id="tspan6293">  pipelines, panels, filters and statistics</tspan><tspan
          sodipodi:role="line"
          x="613.2627"
-         y="535.91492"
+         y="535.91486"
          style="font-size:9.8777771px;line-height:1;fill:#204a87;stroke-width:0.26458332"
-         id="tspan6832">  client-server architecture</tspan></text>
+         id="tspan6832">- For diagnosis and research</tspan></text>
     <g
        style="display:inline;opacity:0.3;fill:#204a87"
        id="g7743-2"
