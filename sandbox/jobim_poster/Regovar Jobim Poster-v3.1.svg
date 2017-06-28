@@ -1708,11 +1708,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.39187385"
-     inkscape:cx="1384.0779"
-     inkscape:cy="917.56731"
+     inkscape:zoom="0.27709666"
+     inkscape:cx="1679.0319"
+     inkscape:cy="1403.7745"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer17"
+     inkscape:current-layer="layer14"
      showgrid="true"
      inkscape:snap-page="true"
      showguides="true"
@@ -1727,7 +1727,7 @@
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:snap-global="false"
+     inkscape:snap-global="true"
      inkscape:snap-bbox="true"
      inkscape:bbox-nodes="true"
      inkscape:bbox-paths="true"
@@ -4456,8 +4456,7 @@
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="Background"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <rect
        style="opacity:1;fill:#abccf0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3.54330707;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect5404"
@@ -5620,26 +5619,15 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="11.521087"
-       y="1140.7329"
-       id="text5184-0-6"><tspan
-         sodipodi:role="line"
-         id="tspan5182-2-1"
-         x="11.521087"
-         y="1140.7329"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.4px;line-height:1;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#000000;stroke-width:0.26458332">Join us, create your tool!</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:1;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
-       x="11.520782"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+       x="12.92627"
        y="1139.6746"
        id="text5184-8"><tspan
          sodipodi:role="line"
          id="tspan5182-4"
-         x="11.520782"
+         x="12.92627"
          y="1139.6746"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.4px;line-height:1;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#204a87;stroke-width:0.26458332;fill-opacity:1">Join us, create your tool!</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:35.27777778px;line-height:1;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff;fill-opacity:1;stroke-width:0.26458332;">Join us, create your tool!</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -5684,14 +5672,14 @@
          id="tspan6341">Contacts </tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;display:inline;opacity:1;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
-       x="9.1298847"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;display:inline;opacity:1;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="10.218425"
        y="1175.425"
        id="text5170-5-9-4-9"><tspan
          sodipodi:role="line"
-         x="9.1298847"
+         x="10.218425"
          y="1175.425"
-         style="font-size:14.11111259px;line-height:1;text-align:start;text-anchor:start;fill:#204a87;fill-opacity:1;stroke-width:0.26458332;"
+         style="font-size:14.11111259px;line-height:1;text-align:start;text-anchor:start;fill:#204a87;fill-opacity:1;stroke-width:0.26458332"
          id="tspan6341-9">http://regovar.org              dev@regovar.org</tspan></text>
     <image
        y="1110.2902"
