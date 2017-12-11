@@ -19,7 +19,7 @@
    inkscape:version="0.92.1 r15371"
    sodipodi:docname="Regovar poster Nantes 2018 - v1.svg"
    enable-background="new"
-   inkscape:export-filename="E:\Git\Sandbox\sandbox\jobim_poster\Regovar Jobim Poster-v3.png"
+   inkscape:export-filename="C:\Users\Olivier\Documents\Git\Sandbox\posters\Assises Nantes 2018\poster_draft.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -1858,10 +1858,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.19593693"
-     inkscape:cx="2095.4762"
-     inkscape:cy="2079.6642"
+     inkscape:cx="1998.5063"
+     inkscape:cy="1309.5604"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer7"
+     inkscape:current-layer="layer9"
      showgrid="true"
      inkscape:snap-page="true"
      showguides="false"
@@ -8449,6 +8449,81 @@
          y="658.7489"
          style="stroke-width:0.26458332"
          id="tspan13389">others.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:12px;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="559.97577"
+       y="234.11151"
+       id="text5602-6"><tspan
+         sodipodi:role="line"
+         x="559.97577"
+         y="234.11151"
+         style="font-size:14.11111069px;line-height:1;stroke-width:0.26458332"
+         id="tspan5622-1"> </tspan></text>
+    <g
+       style="display:inline"
+       id="g13054-9"
+       transform="translate(51.464653,-26.618798)">
+      <rect
+         rx="5"
+         ry="5"
+         transform="scale(-1,1)"
+         y="217.9019"
+         x="-751.57733"
+         height="32.463314"
+         width="161.02284"
+         id="rect5834-95-9-7"
+         style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         transform="matrix(-0.34305692,0,0,-0.18213672,698.24952,270.24857)"
+         inkscape:transform-center-x="2.2822787"
+         d="M 353.83539,204.27794 312.8887,227.91852 V 180.63736 Z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="true"
+         sodipodi:arg2="1.0471976"
+         sodipodi:arg1="0"
+         sodipodi:r2="13.648895"
+         sodipodi:r1="27.297791"
+         sodipodi:cy="204.27794"
+         sodipodi:cx="326.5376"
+         sodipodi:sides="3"
+         id="path5844-9-6-2-3-1-5-2"
+         style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:type="star" />
+      <g
+         style="display:inline;fill:#204a87;fill-opacity:1"
+         transform="translate(-1.8545575,10.784172)"
+         id="g7198-1">
+        <g
+           style="display:inline;opacity:1;fill:#204a87;fill-opacity:1"
+           transform="translate(19.626373,-208.63187)"
+           id="g7068-1">
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;opacity:0.5;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             x="583.94244"
+             y="438.91278"
+             id="text7062-0"><tspan
+               sodipodi:role="line"
+               id="tspan7060-8"
+               x="583.94244"
+               y="438.91278"
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.7555542px;line-height:1;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#204a87;fill-opacity:1;stroke-width:0.26458332">Open source</tspan></text>
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#204a87;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             x="583.94208"
+             y="437.85446"
+             id="text7066-6"><tspan
+               sodipodi:role="line"
+               id="tspan7064-7"
+               x="583.94208"
+               y="437.85446"
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.7555542px;line-height:1;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#204a87;fill-opacity:1;stroke-width:0.26458332">Fiabe</tspan></text>
+        </g>
+      </g>
+    </g>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -8568,8 +8643,7 @@
      inkscape:groupmode="layer"
      id="layer8"
      inkscape:label="Intro"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
