@@ -1,1 +1,8 @@
+Regovar est un logiciel d'analyse de données de séquençage haut débit. Son interface graphique est simple et conviviale.
+Il permet le traitement de données génétiques, depuis la récupération des fichiers produits par les séquenceurs, quelle qu’en soit la technologie, jusqu’à la génération de rapports illustrés et de comptes-rendus d’analyse en passant par les contrôles de qualité, la détection, l’annotation, le filtrage, la priorisation et la visualisation de variants.
 
+- Panel, exome, génome
+- Diagnostic et recherche
+- PHRCI GIRCI Grand Ouest
+- 7 CHU, mais ouvert à tous
+- Gratuit, libre, ouvert et collaboratif
