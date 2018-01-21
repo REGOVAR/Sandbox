@@ -4,6 +4,7 @@
 
 Le logiciel libre, collaboratif et gratuit d'analyse de données NGS.
 
+- PHRCI GIRCI Grand Ouest
 
 ## Authors
 Anne-Sophie DENOMMÉ-PICHON1,2,3,4
@@ -34,7 +35,7 @@ REGOVAR Consortium
 ## Le projet
 Regovar est un logiciel d'analyse de données de séquençage haut débit, depuis la récupération des fichiers produits par les séquenceurs, quelle qu’en soit la technologie, jusqu’à la génération de rapports illustrés et de comptes-rendus d’analyse en passant par les contrôles de qualité, la détection, l’annotation, le filtrage, la priorisation et la visualisation de variants.
 
-- PHRCI GIRCI Grand Ouest (à mettre éventuellement sous le titre principal)
+
 - Panel, exome, génome
 - Diagnostic et recherche
 - Interface simple et conviviale
@@ -42,21 +43,11 @@ Regovar est un logiciel d'analyse de données de séquençage haut débit, depui
 - Pour cliniciens, biologistes et bioinformaticiens
 
 
-#- Phénotype, HPO, 
-#- Logiciel tout en un, qui permet de mener une analyse de la saisie des informations du sujet jusqu'au résultat de ses analyses
-Utilisation de pipelines locaux et partagés avec les autres centres
-#- Propose une interface simple qui permet d'encapsuler et de lancer n'importe quel pipeline via docker ou LXD
-#- Recherchez les données de vos patients, des analyses, des variants en lien avec 
-#- Intégration de HPO, PubMed, Orphanet, Varsome, Marrvel...
-issues de la base de données locale, de Human Phenotype Ontology, de PubMed, d'Orphanet...
-#- Moteur de recherche global qui fouille dans la base de donnée locale ainsi que via les API d'OMIM, Orphanet, HPO et Pubmed
-#- Technologies modernes
 
 
 - Icône engrenage. Créez vos pipelines ou utilisez ceux déjà disponibles.
 - Icône répertoire. Sauvegardez vos données NGS et vos annotations dans une base de données locale et sécurisée. 
 - Icône planète. Partagez facilement vos pipelines, filtres, panels ainsi que vos annotations et statistiques sur les variants.
 - Icône loupe. Recherchez les données locales, d'OMIM, de Human Phenotype Ontology, de PubMed, d'Orphanet...
-- Icône poignée de mains (si ça existe). Rejoignez les 7 CHU impliqués dans un projet collaboratif, libre et ouvert sans limites institutionnelles ou géographiques.
-- Icône monnaie. Il se base exclusivement sur des technologies et des logiciels libres et gratuits, éliminant ainsi toute contraintes contractuelle et budgétaire.
+- Icône poignée de mains (si ça existe). Rejoignez les sept CHU impliqués dans un projet collaboratif, libre et ouvert sans limites institutionnelles ou géographiques.
 - Icône monnaie. Éliminez vos contraintes contractuelles et budgétaires en utilisant exclusivement des technologies libres et gratuites.
