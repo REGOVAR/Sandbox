@@ -2,7 +2,7 @@
 
 # Regovar
 
-Le logiciel libre, collaboratif et gratuit d'analyse de données NGS.
+Le logiciel libre, collaboratif et gratuit d’analyse de données NGS.
 
 - PHRCI GIRCI Grand Ouest
 
@@ -17,12 +17,12 @@ Dominique BONNEAU1,2
 REGOVAR Consortium
 
 
-1 - Département de Biochimie et Génétique, CHU d'Angers 
+1 - Département de Biochimie et Génétique, CHU d’Angers 
 2 - INSERM UMR 1083 - Univ. Angers
 3 - Laboratoire de génétique - CHRU de Nancy
 4 - INSERM UMR 954 - Univ. Lorraine
 5 - Centre de Bioinformatique de Bordeaux, Univ. Bordeaux
-6 - Laboratoire de Génétique Moléculaire et d'Histocompatibilité, CHRU de Brest
+6 - Laboratoire de Génétique Moléculaire et d’Histocompatibilité, CHRU de Brest
 7 - INSERM UMR 1078 - Univ. Brest
 
 
