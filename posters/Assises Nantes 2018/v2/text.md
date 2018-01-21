@@ -34,13 +34,13 @@ REGOVAR Consortium
 ## Le projet
 Regovar est un logiciel d'analyse de données de séquençage haut débit, depuis la récupération des fichiers produits par les séquenceurs, quelle qu’en soit la technologie, jusqu’à la génération de rapports illustrés et de comptes-rendus d’analyse en passant par les contrôles de qualité, la détection, l’annotation, le filtrage, la priorisation et la visualisation de variants.
 
+- PHRCI GIRCI Grand Ouest (à mettre éventuellement sous le titre principal)
+- 7 CHU, mais ouvert à tous
 - Panel, exome, génome
 - Diagnostic et recherche
 - Interface simple et conviviale
 - Technologies fiables et modernes
 - Pour cliniciens, biologistes et bioinformaticiens
-- PHRCI GIRCI Grand Ouest
-- 7 CHU, mais ouvert à tous
 
 
 #- Phénotype, HPO, 
