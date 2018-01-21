@@ -35,7 +35,6 @@ REGOVAR Consortium
 Regovar est un logiciel d'analyse de données de séquençage haut débit, depuis la récupération des fichiers produits par les séquenceurs, quelle qu’en soit la technologie, jusqu’à la génération de rapports illustrés et de comptes-rendus d’analyse en passant par les contrôles de qualité, la détection, l’annotation, le filtrage, la priorisation et la visualisation de variants.
 
 - PHRCI GIRCI Grand Ouest (à mettre éventuellement sous le titre principal)
-- 7 CHU, mais ouvert à tous
 - Panel, exome, génome
 - Diagnostic et recherche
 - Interface simple et conviviale
@@ -58,6 +57,6 @@ issues de la base de données locale, de Human Phenotype Ontology, de PubMed, d'
 - Icône répertoire. Sauvegardez vos données NGS et vos annotations dans une base de données locale et sécurisée. 
 - Icône planète. Partagez facilement vos pipelines, filtres, panels ainsi que vos annotations et statistiques sur les variants.
 - Icône loupe. Recherchez les données locales, d'OMIM, de Human Phenotype Ontology, de PubMed, d'Orphanet...
-- Icône poignée de mains (si ça existe). Regovar est un projet collaboratif, libre et ouvert sans limites institutionnelles ou géographiques.
+- Icône poignée de mains (si ça existe). Rejoignez les 7 CHU impliqués dans un projet collaboratif, libre et ouvert sans limites institutionnelles ou géographiques.
 - Icône monnaie. Il se base exclusivement sur des technologies et des logiciels libres et gratuits, éliminant ainsi toute contraintes contractuelle et budgétaire.
 - Icône monnaie. Éliminez vos contraintes contractuelles et budgétaires en utilisant exclusivement des technologies libres et gratuites.
