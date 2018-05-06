@@ -1,0 +1,26 @@
+REGOVAR, logiciel libre pour l'analyse de données de séquençage haut débit pour les maladies génétiques rares
+
+Anne-Sophie Denommé-Pichon 1,2, Olivier Gueudelot 3,4, Jérémie Roquet 5, David Goudenège 3,4, Dominique Bonneau 3,4, and Consortium Regovar
+1 Service de Génétique, Centre Hospitalier Régional Universitaire de Nancy, 54500 Vandœuvre-lès-Nancy, France
+2 Nutrition-Génétique et Exposition aux Risques Environnementaux (NGERE), Institut National de la Santé et de la Recherche Médicale : UMRS954/UMRS1256, Université de Lorraine, Faculté de Médecine, 9 avenue de la Forêt de Haye, 54500 Vandœuvre-les-Nancy, France
+3 Laboratoire de génétique, CHU Angers, 49933 Angers, France
+4 Biologie Neurovasculaire et Mitochondriale Intégrée, Université d'Angers, Institut National de la Santé et de la Recherche Médicale : U1083, Centre National de la Recherche Scientifique : UMR6214, UFR Sciences Médicales, 1 rue Haute de Reculée 49045 Angers Cedex01, France
+5 dnalyze.me, Regovar, 75013 Paris, France
+
+Résumé
+1 Présentation
+REGOVAR est un projet collaboratif, libre et ouvert de logiciel d'analyse de données de séquençage haut débit avec une interface graphique simple et conviviale pour les panels de gènes, l'exome et le génome (DPNI, recherche de SNV, CNV, SV...). Le projet est financé dans le cadre d'un appel d'offre du GIRCI des Hôpitaux Universitaires du Grand Ouest (HUGO, Angers, Brest, Nantes, Poitiers, Rennes et Tours) pour structurer les généticiens cliniciens, biologistes et bioinformaticiens impliqués dans le diagnostic moléculaire des maladies génétiques rares. Si la bioinformatique médicale appliquée au NGS permet aujourd'hui d'analyser avec succès un grand nombre de données au sein d'un CHU ou d'une région, elle souffre d'un manque de coordination à l'échelle nationale. REGOVAR vise à impliquer et fédérer les différentes communautés concernées, sans limites institutionnelles ou géographiques. Il se base exclusivement sur des technologies et des logiciels libres et gratuits, éliminant toute contrainte contractuelle et budgétaire.
+
+2 Fonctionnalités
+Après quelques années de développement, le déploiement de REGOVAR dans les centres intéressés a commencé pour une utilisation aussi bien en recherche qu'en diagnostic. REGOVAR permet le traitement de données génétiques, depuis la récupération des fichiers produits par les séquenceurs, quelle qu'en soit la technologie, jusqu'à la génération de rapports illustrés et de comptes-rendus d'analyse en passant par les contrôles de qualité, la détection, l'annotation, le filtrage, la priorisation et la visualisation de variants.
+
+Son architecture client-serveur permet une utilisation depuis des ordinateurs de bureau sous Windows, Linux et macOS, via une interface graphique claire et intuitive conçue pour des généticiens n'ayant pas nécessairement de compétence spécifique en bioinformatique (filtres de variants enregistrables, simplification de la bioanalyse...). Le déploiement de REGOVAR est facilité par l'utilisation de packages et une configuration automatisée (via SaltStack).
+
+Sa conception modulaire permet d'intégrer dynamiquement de nouveaux pipelines, qui peuvent être partagés au sein de la communauté, quelles que soient leurs dépendances, grâce à une encapsulation Docker. Ces échanges de pipelines permettront à terme l'harmonisation des bonnes pratiques avec des pipelines unifiés nationalement et validés par l'ANPGM.
+
+REGOVAR intègre une base de données principale dimensionnée pour supporter aussi bien l'analyse de panels, d'exomes, que de génomes complets. Cette base est enrichie de données publiques telles que celles provenant de gnomAD et dbNSFP, ainsi que de données locales. Il permet le stockage d'informations concernant les patients (imagerie, consentements, liens familiaux, phénotype...) et offre la possibilité de filtrer les variants par phénotype par l'intermédiaire de Human Phenotype Ontology. L'analyse des variants est facilitée par un module de recherche connecté à des outils tels que PubMed et OMIM, ainsi qu'un accès direct aux outils en ligne comme Varsome.
+ 
+Il est conçu pour s'adapter aux évolutions futures et laisse la possibilité de s'interfacer avec d'autres applications. À terme, des échanges de certaines informations anonymisées (fréquence des variants, pathogénicité des variants, phénotype) seront également possibles, selon une granularité laissée à la discrétion des généticiens.
+ 
+3 Appel à collaboration
+REGOVAR est également déployé dans le laboratoire de génétique du CHRU de Nancy et suscite l'intérêt d'autres acteurs comme le laboratoire de génétique du CHU de Montpellier. Le projet est ouvert à toute personne souhaitant apporter sa contribution : idées, intégration de pipeline, développement, test, documentation... Informations disponibles sur https://regovar.org/.
