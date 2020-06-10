@@ -22,13 +22,13 @@ All formats are available for upload and download
 
 ## Client
 No logic, user interface only
-###Native
+### Native
 * Technology: Qt
 * Dashboard
 * Job queued monitoring
 * Internationalization (French and English)
 
-###Web
+### Web
 * DNS
 * Wiki
  * Technology: Gollum
